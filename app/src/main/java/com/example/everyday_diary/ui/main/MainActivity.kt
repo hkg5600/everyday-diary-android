@@ -1,7 +1,8 @@
-package com.example.everyday_diary
+package com.example.everyday_diary.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.everyday_diary.R
 
 class MainActivity : AppCompatActivity() {
 
