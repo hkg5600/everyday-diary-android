@@ -14,6 +14,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.ui.main.MainActivity
+import com.example.everyday_diary.ui.start.StartActivity
 
 
 abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatActivity() {
@@ -39,7 +40,7 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
         viewDataBinding.executePendingBindings()
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         initView()
         initObserver()
         initListener()
@@ -52,10 +53,10 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
 
         viewModel.tokenChanged.observe(this, Observer {
             if (it) {
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity((Intent(this, this::class.java)).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
             } else {
                 makeToast("refresh token", true)
-                //startActivity(Intent(this, LoginActivity::class.java))
+                startActivity(Intent(this, StartActivity::class.java))
                 finish()
             }
         })

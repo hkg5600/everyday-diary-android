@@ -3,7 +3,11 @@ package com.example.everyday_diary.di
 import com.example.everyday_diary.network.api.UserApi
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.network.service.UserServiceImpl
+import com.example.everyday_diary.ui.login.LoginFragment
+import com.example.everyday_diary.ui.login.LoginFragmentViewModel
+import com.example.everyday_diary.ui.main.MainActivityViewModel
 import com.example.everyday_diary.ui.splash.SplashActivityViewModel
+import com.example.everyday_diary.ui.start.StartActivityViewModel
 import com.example.everyday_diary.utils.BASE_URL
 import com.example.everyday_diary.utils.TokenManager
 import org.koin.androidx.viewmodel.ext.koin.viewModel
@@ -32,6 +36,9 @@ var serviceModel = module {
 
 var viewModelPart = module {
     viewModel { SplashActivityViewModel(get()) }
+    viewModel { StartActivityViewModel() }
+    viewModel { MainActivityViewModel() }
+    viewModel { LoginFragmentViewModel() }
 }
 
 var adapterPart = module {
@@ -47,7 +54,7 @@ var tokenPart = module {
 }
 
 var fragmentPart = module {
-
+    factory { LoginFragment() }
 }
 
 var myDiModule = listOf(viewModelPart, networkModule, serviceModel, adapterPart, repositoryPart, tokenPart, fragmentPart)

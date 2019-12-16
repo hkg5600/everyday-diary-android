@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import com.example.everyday_diary.ui.main.MainActivity
 import com.example.everyday_diary.utils.FileManager
 import com.example.everyday_diary.network.response.TokenResponse
+import com.example.everyday_diary.ui.start.StartActivity
 import com.example.everyday_diary.utils.TokenObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -39,11 +40,11 @@ class SplashActivity : AppCompatActivity() {
         viewModel.error.observe(this, Observer {
             when (it) {
                 "조작된 토큰입니다" -> {
-                    //startActivity(Intent(this, LoginActivity::class.java))
+                    startActivity(Intent(this, StartActivity::class.java))
                     finish()
                 }
                 "만료된 토큰입니다" -> viewModel.refreshToken(TokenObject.refreshToken!!)
-                //"만료된 리프레쉬 토큰입니다" -> startActivity(Intent(this, LoginActivity::class.java))
+                "만료된 리프레쉬 토큰입니다" -> startActivity(Intent(this, StartActivity::class.java))
             }
         })
 
@@ -55,7 +56,7 @@ class SplashActivity : AppCompatActivity() {
                         viewModel.insertToken(TokenObject.token!!, TokenObject.refreshToken!!)
                     } else {
                         Toast.makeText(this, "세션이 만료되었습니다", Toast.LENGTH_SHORT).show()
-                        //startActivity(Intent(this, LoginActivity::class.java))
+                        startActivity(Intent(this, StartActivity::class.java))
                         finish()
                     }
                 }
@@ -70,7 +71,7 @@ class SplashActivity : AppCompatActivity() {
 
         viewModel.tokenError.observe(this, Observer {
             Toast.makeText(this, "로그인 해주세요", Toast.LENGTH_SHORT).show()
-            //startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, StartActivity::class.java))
             finish()
         })
 
