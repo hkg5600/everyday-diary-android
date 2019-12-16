@@ -1,14 +1,13 @@
-package com.example.travelercommunityapp.base
+package com.example.everyday_diary.base
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.everyday_diary.room.model.Token
 import com.example.everyday_diary.utils.SingleLiveEvent
 import com.example.everyday_diary.utils.TokenManager
-import com.example.travelercommunityapp.network.response.Response
-import com.example.travelercommunityapp.network.response.TokenResponse
-import com.example.travelercommunityapp.utils.TokenObject
+import com.example.everyday_diary.network.response.Response
+import com.example.everyday_diary.network.response.TokenResponse
+import com.example.everyday_diary.utils.TokenObject
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

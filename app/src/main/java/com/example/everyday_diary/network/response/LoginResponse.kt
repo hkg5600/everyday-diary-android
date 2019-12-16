@@ -1,4 +1,4 @@
-package com.example.travelercommunityapp.network.response
+package com.example.everyday_diary.network.response
 
 import com.google.gson.annotations.SerializedName
 

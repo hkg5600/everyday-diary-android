@@ -1,4 +1,4 @@
-package com.example.travelercommunityapp.base
+package com.example.everyday_diary.base
 
 import androidx.room.Delete
 import androidx.room.Insert

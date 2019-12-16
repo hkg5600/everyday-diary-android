@@ -1,5 +1,5 @@
-package com.example.travelercommunityapp.network.response
+package com.example.everyday_diary.network.response
 
-import com.example.travelercommunityapp.network.model.UserInfo
+import com.example.everyday_diary.network.model.UserInfo
 
 data class UserInfoResponse(val user: UserInfo)

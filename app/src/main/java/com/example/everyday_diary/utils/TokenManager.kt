@@ -4,7 +4,7 @@ import android.app.Application
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.room.model.Token
 import com.example.everyday_diary.room.repository.TokenRepository
-import com.example.travelercommunityapp.network.request.TokenRequest
+import com.example.everyday_diary.network.reqeust.TokenRequest
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 

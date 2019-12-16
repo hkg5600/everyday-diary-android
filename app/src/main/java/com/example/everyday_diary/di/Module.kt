@@ -1,5 +1,6 @@
 package com.example.everyday_diary.di
 
+import com.example.everyday_diary.ui.splash.SplashActivityViewModel
 import com.example.everyday_diary.utils.BASE_URL
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
@@ -26,7 +27,7 @@ var serviceModel = module {
 }
 
 var viewModelPart = module {
-
+    viewModel { SplashActivityViewModel(get()) }
 }
 
 var adapterPart = module {

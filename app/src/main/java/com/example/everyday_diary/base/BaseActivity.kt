@@ -1,4 +1,4 @@
-package com.example.travelercommunityapp.base
+package com.example.everyday_diary.base
 
 
 import android.app.Activity
@@ -12,10 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.ui.main.MainActivity
-import com.google.android.material.snackbar.Snackbar
 
 
 abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatActivity() {

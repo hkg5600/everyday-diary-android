@@ -1,12 +1,12 @@
 package com.example.everyday_diary.network.api
 
-import com.example.travelercommunityapp.network.request.LoginRequest
-import com.example.travelercommunityapp.network.request.RegisterRequest
-import com.example.travelercommunityapp.network.request.TokenRequest
-import com.example.travelercommunityapp.network.response.LoginResponse
-import com.example.travelercommunityapp.network.response.Response
-import com.example.travelercommunityapp.network.response.TokenResponse
-import com.example.travelercommunityapp.network.response.UserInfoResponse
+import com.example.everyday_diary.network.reqeust.LoginRequest
+import com.example.everyday_diary.network.reqeust.RegisterRequest
+import com.example.everyday_diary.network.reqeust.TokenRequest
+import com.example.everyday_diary.network.response.LoginResponse
+import com.example.everyday_diary.network.response.Response
+import com.example.everyday_diary.network.response.TokenResponse
+import com.example.everyday_diary.network.response.UserInfoResponse
 import io.reactivex.Single
 import retrofit2.http.Body
 import retrofit2.http.GET

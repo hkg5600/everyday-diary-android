@@ -1,7 +1,4 @@
-package com.example.travelercommunityapp.utils
-
-import com.example.travelercommunityapp.network.request.TokenRequest
-import com.example.travelercommunityapp.network.service.UserService
+package com.example.everyday_diary.utils
 
 object TokenObject {
     var token : String? = null
