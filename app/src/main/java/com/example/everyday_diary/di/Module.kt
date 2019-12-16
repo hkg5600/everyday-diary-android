@@ -38,7 +38,7 @@ var viewModelPart = module {
     viewModel { SplashActivityViewModel(get()) }
     viewModel { StartActivityViewModel() }
     viewModel { MainActivityViewModel() }
-    viewModel { LoginFragmentViewModel() }
+    viewModel { LoginFragmentViewModel(get()) }
 }
 
 var adapterPart = module {

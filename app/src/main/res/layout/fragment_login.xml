@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="vm"
+            type="com.example.everyday_diary.ui.login.LoginFragmentViewModel" />
+    </data>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,6 +50,7 @@
                     android:singleLine="true"
                     android:inputType="textEmailAddress"
                     android:imeOptions="actionNext"
+                    android:text="@={vm.id}"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_welcome" />
 
                 <EditText
@@ -58,6 +65,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     android:inputType="textPassword"
                     android:imeOptions="actionDone"
+                    android:text="@={vm.pw}"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_id" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -83,7 +91,8 @@
             android:background="@drawable/login_button_background"
             android:adjustViewBounds="true"
             android:scaleType="center"
-            android:src="@drawable/ic_execute" />
+            android:src="@drawable/ic_execute"
+            android:onClick="@{() -> vm.login()}"/>
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
