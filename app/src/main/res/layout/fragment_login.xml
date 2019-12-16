@@ -33,7 +33,7 @@
                     android:lineSpacingExtra="8sp"
                     android:text="@string/string_welcome"
                     android:textColor="#b3312f36"
-                    android:textSize="24sp"
+                    android:textSize="34sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

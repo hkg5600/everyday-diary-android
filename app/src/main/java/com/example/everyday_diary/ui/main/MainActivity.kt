@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.everyday_diary.R
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityMainBinding
@@ -27,8 +29,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     private var permission: Boolean = false
 
     override fun initView() {
-        title = ""
         checkPermission()
+        title = ""
         setSupportActionBar(toolbar)
         initNavigation()
     }
@@ -48,7 +50,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> {
+            R.id.menu_nav -> {
                 viewDataBinding.drawerLayout.openDrawer(GravityCompat.END)
             }
         }
@@ -56,11 +58,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
 
     override fun onBackPressed() =
-        if (viewDataBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) viewDataBinding.drawerLayout.closeDrawer(
-            GravityCompat.START
+        if (viewDataBinding.drawerLayout.isDrawerOpen(GravityCompat.END)) viewDataBinding.drawerLayout.closeDrawer(
+            GravityCompat.END
         ) else super.onBackPressed()
 
-    override fun onCreateOptionsMenu(menu: Menu?) = false
+    override fun onCreateOptionsMenu(menu: Menu?) : Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
 
     private fun initNavigation() {
         val actionBarDrawerToggle = ActionBarDrawerToggle(
@@ -70,7 +75,26 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             R.string.drawer_open,
             R.string.drawer_close
         )
+        viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         viewDataBinding.drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        viewDataBinding.drawerLayout.setDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) {
+
+            }
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            }
+
+        })
     }
 
     private fun checkPermission() {
