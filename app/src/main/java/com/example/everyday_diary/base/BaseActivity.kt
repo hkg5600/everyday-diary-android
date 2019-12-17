@@ -1,6 +1,5 @@
 package com.example.everyday_diary.base
 
-
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.ui.start.StartActivity
-
 
 abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatActivity() {
 

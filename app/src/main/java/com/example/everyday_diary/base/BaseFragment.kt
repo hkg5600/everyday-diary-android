@@ -1,5 +1,6 @@
 package com.example.everyday_diary.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,8 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-
+import com.example.everyday_diary.ui.start.StartActivity
+import androidx.lifecycle.Observer
 abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment() {
 
     lateinit var viewDataBinding: T
@@ -35,6 +37,19 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
 
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutResourceId, container, false)
         viewDataBinding.executePendingBindings()
+        viewModel.networkError.observe(viewLifecycleOwner, Observer {
+            makeToast("네트워크 연결 상태를 확인해 주세요", false)
+            activity?.recreate()
+        })
+        viewModel.tokenChanged.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                activity?.recreate()
+            } else {
+                makeToast("refresh token", true)
+                startActivity(Intent(activity?.applicationContext, StartActivity::class.java))
+                activity?.finish()
+            }
+        })
 
 //BaseFragment
         initView()

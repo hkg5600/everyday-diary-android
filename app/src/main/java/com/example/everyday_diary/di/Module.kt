@@ -15,12 +15,19 @@ import com.example.everyday_diary.ui.splash.SplashActivityViewModel
 import com.example.everyday_diary.ui.start.StartActivityViewModel
 import com.example.everyday_diary.utils.BASE_URL
 import com.example.everyday_diary.utils.TokenManager
+import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
+//val httpClient : OkHttpClient = OkHttpClient.Builder()
+//    .connectTimeout(60, TimeUnit.SECONDS) // connect timeout
+//    .writeTimeout(60, TimeUnit.SECONDS) // write timeout
+//    .readTimeout(60, TimeUnit.SECONDS)
+//    .build()// read timeout
 
 val retrofit: Retrofit = Retrofit
     .Builder()
