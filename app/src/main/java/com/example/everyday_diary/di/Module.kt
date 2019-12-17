@@ -1,5 +1,6 @@
 package com.example.everyday_diary.di
 
+import com.example.everyday_diary.adapter.MonthAdapter
 import com.example.everyday_diary.network.api.UserApi
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.network.service.UserServiceImpl
@@ -42,7 +43,7 @@ var viewModelPart = module {
 }
 
 var adapterPart = module {
-
+    factory { MonthAdapter() }
 }
 
 var repositoryPart = module {

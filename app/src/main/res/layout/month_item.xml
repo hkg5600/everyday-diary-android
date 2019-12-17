@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.example.everyday_diary.adapter.MonthAdapter.Month" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="10dp"
+        android:elevation="10dp"
+        android:layout_marginStart="@dimen/pageMarginAndOffset"
+        android:layout_marginEnd="@dimen/pageMarginAndOffset">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/holder_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="10dp">
+
+            <TextView
+                android:id="@+id/text_view_month_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:textSize="38sp"
+                android:textColor="#ffffff"
+                android:lineSpacingExtra="13sp"
+                android:text="@{Integer.toString(item.month)}"
+                tool:text="8"/>
+
+            <TextView
+                android:id="@+id/text_view_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_month_num"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
+                android:textColor="#ffffff"
+                android:lineSpacingExtra="8sp"
+                android:textSize="24sp"
+                android:text="@{item.monthName}"
+                tool:text="Aug"/>
+
+            <TextView
+                android:id="@+id/text_view_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/progress_date"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="12sp"
+                android:textColor="#ffffff"
+                android:lineSpacingExtra="4sp"
+                android:text="@{item.progress}"
+                tool:text="13/31"/>
+
+            <ProgressBar
+                android:id="@+id/progress_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleHorizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="30dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>
