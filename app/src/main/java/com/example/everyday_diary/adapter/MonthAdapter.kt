@@ -2,6 +2,7 @@ package com.example.everyday_diary.adapter
 
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
@@ -11,7 +12,7 @@ import com.example.everyday_diary.databinding.MonthItemBinding
 
 class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
 
-    private var monthList = ArrayList<Month>()
+    val monthList = ArrayList<Month>()
 
     data class Month(
         val month: Int,
@@ -23,7 +24,8 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
     )
 
     fun setMonthList(monthList: ArrayList<Month>) {
-        this.monthList = monthList
+        this.monthList.clear()
+        this.monthList.addAll(monthList)
         notifyDataSetChanged()
     }
 
@@ -36,7 +38,15 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
     override fun getItemCount() = monthList.size
 
     override fun onBindViewHolder(holder: MonthHolder, position: Int) {
+
+        if (onItemClickListener != null) {
+            holder.layout.setOnClickListener { v ->
+                onItemClickListener?.onClick(v, position, holder)
+            }
+        }
+
         holder.layout.setBackgroundColor(Color.parseColor(monthList[position].color))
+
         holder.bind(monthList[position])
     }
 
@@ -47,5 +57,15 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
         fun bind(item: Month) {
             binding.item = item
         }
+    }
+
+    var onItemClickListener: OnItemClickListener? = null
+
+    interface OnItemClickListener {
+        fun onClick(
+            view: View,
+            position: Int,
+            holder: MonthHolder
+        )
     }
 }

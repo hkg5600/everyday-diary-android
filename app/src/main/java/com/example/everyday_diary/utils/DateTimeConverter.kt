@@ -24,6 +24,6 @@ object DateTimeConverter {
         10 -> "Oct"
         11 -> "Nov"
         12 -> "Dec"
-        else -> {}
+        else -> "Jan"
     }
 }

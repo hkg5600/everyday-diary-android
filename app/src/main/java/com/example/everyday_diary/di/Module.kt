@@ -4,6 +4,7 @@ import com.example.everyday_diary.adapter.MonthAdapter
 import com.example.everyday_diary.network.api.UserApi
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.network.service.UserServiceImpl
+import com.example.everyday_diary.ui.diary_list.DiaryListActivitViewModel
 import com.example.everyday_diary.ui.login.LoginFragment
 import com.example.everyday_diary.ui.login.LoginFragmentViewModel
 import com.example.everyday_diary.ui.main.MainActivityViewModel
@@ -40,6 +41,7 @@ var viewModelPart = module {
     viewModel { StartActivityViewModel() }
     viewModel { MainActivityViewModel() }
     viewModel { LoginFragmentViewModel(get()) }
+    viewModel { DiaryListActivitViewModel() }
 }
 
 var adapterPart = module {

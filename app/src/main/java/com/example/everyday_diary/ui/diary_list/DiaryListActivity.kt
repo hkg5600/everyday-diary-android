@@ -7,10 +7,10 @@ import com.example.everyday_diary.databinding.ActivityDiaryListBinding
 import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DIaryListActivitViewModel>() {
+class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivitViewModel>() {
 
     override val layoutResourceId = R.layout.activity_diary_list
-    override val viewModel: DIaryListActivitViewModel by viewModel()
+    override val viewModel: DiaryListActivitViewModel by viewModel()
 
     override fun initView() {
         initActionBar()
@@ -33,7 +33,7 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DIaryListActivi
         intent.extras?.get("month")?.let {month ->
             intent.extras?.get("year")?.let {year ->
                 title = "$month / $year"
-            }   
+            }
         }
     }
 

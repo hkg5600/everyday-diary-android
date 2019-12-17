@@ -2,6 +2,7 @@ package com.example.everyday_diary.ui.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
@@ -18,6 +19,7 @@ import com.example.everyday_diary.R
 import com.example.everyday_diary.adapter.MonthAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityMainBinding
+import com.example.everyday_diary.ui.diary_list.DiaryListActivity
 import com.example.everyday_diary.utils.DateTimeConverter
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
@@ -51,7 +53,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
 
     override fun initListener() {
+        monthAdapter.onItemClickListener = object : MonthAdapter.OnItemClickListener {
+            override fun onClick(view: View, position: Int, holder: MonthAdapter.MonthHolder) {
+                startActivity(
+                    Intent(this@MainActivity, DiaryListActivity::class.java)
+                        .putExtra(
+                            "month",
+                            DateTimeConverter.monthToString(monthAdapter.monthList[position].month)
+                        )
+                        .putExtra("year", viewDataBinding.textViewYear.text)
+                )
+            }
 
+        }
     }
 
     override fun initViewModel() {
