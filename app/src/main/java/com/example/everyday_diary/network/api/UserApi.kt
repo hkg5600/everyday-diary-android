@@ -18,7 +18,7 @@ interface UserApi {
     @POST("/diary/login/")
     fun login(@Body login: LoginRequest) : Single<retrofit2.Response<Response<LoginResponse>>>
 
-    @POST("/api/verify/")
+    @POST("/diary/verify/")
     fun verifyToken(@Body token: TokenRequest) : Single<retrofit2.Response<Response<Any>>>
 
     @POST("/diary/refresh/")

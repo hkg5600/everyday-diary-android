@@ -33,6 +33,7 @@ import kotlin.collections.ArrayList
 import kotlin.math.abs
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.network.response.MonthCount
+import kotlinx.android.synthetic.main.app_bar.view.*
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_main
@@ -57,6 +58,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                     monthAdapter.monthList.forEach { data ->
                         data.currentProgress = it.count[data.month - 1]
                         data.progress = "${it.count[data.month - 1]}/${data.total}"
+                        monthAdapter.notifyDataSetChanged()
                     }
                 }
             }
