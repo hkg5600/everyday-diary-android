@@ -31,6 +31,8 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
+import androidx.lifecycle.Observer
+import com.example.everyday_diary.network.response.MonthCount
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_main
@@ -49,7 +51,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
 
     override fun initObserver() {
-
+        viewModel.data.observe(this, Observer {
+            when (it) {
+                is MonthCount -> {
+                    monthAdapter.monthList.forEach { data ->
+                        data.currentProgress = it.count[data.month - 1]
+                        data.progress = "${it.count[data.month - 1]}/${data.total}"
+                    }
+                }
+            }
+        })
     }
 
     override fun initListener() {
@@ -69,7 +80,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
 
     override fun initViewModel() {
-
+        viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
     }
 
     @SuppressLint("SetTextI18n")

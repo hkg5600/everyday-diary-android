@@ -1,7 +1,10 @@
 package com.example.everyday_diary.di
 
 import com.example.everyday_diary.adapter.MonthAdapter
+import com.example.everyday_diary.network.api.DiaryApi
 import com.example.everyday_diary.network.api.UserApi
+import com.example.everyday_diary.network.service.DiaryService
+import com.example.everyday_diary.network.service.DiaryServiceImpl
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.network.service.UserServiceImpl
 import com.example.everyday_diary.ui.diary_list.DiaryListActivitViewModel
@@ -27,19 +30,22 @@ val retrofit: Retrofit = Retrofit
     .build()
 
 private val userApi: UserApi = retrofit.create(UserApi::class.java)
+private val diaryApi: DiaryApi = retrofit.create(DiaryApi::class.java)
 
 val networkModule = module {
     single { userApi }
+    single { diaryApi }
 }
 
 var serviceModel = module {
     factory<UserService> { UserServiceImpl(get()) }
+    factory<DiaryService> { DiaryServiceImpl(get()) }
 }
 
 var viewModelPart = module {
     viewModel { SplashActivityViewModel(get()) }
     viewModel { StartActivityViewModel() }
-    viewModel { MainActivityViewModel() }
+    viewModel { MainActivityViewModel(get()) }
     viewModel { LoginFragmentViewModel(get()) }
     viewModel { DiaryListActivitViewModel() }
 }
@@ -60,4 +66,12 @@ var fragmentPart = module {
     factory { LoginFragment() }
 }
 
-var myDiModule = listOf(viewModelPart, networkModule, serviceModel, adapterPart, repositoryPart, tokenPart, fragmentPart)
+var myDiModule = listOf(
+    viewModelPart,
+    networkModule,
+    serviceModel,
+    adapterPart,
+    repositoryPart,
+    tokenPart,
+    fragmentPart
+)

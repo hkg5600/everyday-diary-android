@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.example.everyday_diary.ui.main.MainActivity
 import com.example.everyday_diary.ui.start.StartActivity
 
 

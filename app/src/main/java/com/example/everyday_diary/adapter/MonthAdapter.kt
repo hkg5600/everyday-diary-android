@@ -1,9 +1,11 @@
 package com.example.everyday_diary.adapter
 
 import android.graphics.Color
+import android.os.Process
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +19,8 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
     data class Month(
         val month: Int,
         val monthName: String,
-        val progress: String,
-        val currentProgress: Int,
+        var progress: String,
+        var currentProgress: Int,
         val total: Int,
         val color: String
     )
@@ -46,13 +48,15 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
         }
 
         holder.layout.setBackgroundColor(Color.parseColor(monthList[position].color))
-
+        holder.progress.max = monthList[position].total
+        holder.progress.progress = monthList[position].currentProgress
         holder.bind(monthList[position])
     }
 
     inner class MonthHolder(private val binding: MonthItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val layout : ConstraintLayout = binding.holderLayout
+        val progress: ProgressBar = binding.progressDate
 
         fun bind(item: Month) {
             binding.item = item
