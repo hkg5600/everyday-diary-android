@@ -22,6 +22,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.diary_list.DiaryListActivity"></activity>
         <activity android:name=".ui.start.StartActivity" />
         <activity
             android:name=".ui.splash.SplashActivity"
