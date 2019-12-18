@@ -38,6 +38,7 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
         viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
         viewDataBinding.executePendingBindings()
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
         initView()
         initObserver()
         initListener()

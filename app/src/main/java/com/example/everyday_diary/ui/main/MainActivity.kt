@@ -2,6 +2,7 @@ package com.example.everyday_diary.ui.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -43,8 +45,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     override fun initView() {
         checkPermission()
-        title = ""
-        setSupportActionBar(toolbar)
+        initActionBar()
         initNavigation()
         initViewPager()
         initMonthView()
@@ -85,21 +86,33 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
     }
 
-    @SuppressLint("SetTextI18n")
+    private fun initActionBar() {
+        title = ""
+        setSupportActionBar(toolbar)
+    }
+
     private fun initDateTime() {
-        val today: Int
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.e("Time:", "up sdk 24")
-            viewDataBinding.textViewDate.text =
-                "${DateTimeConverter.monthToString(LocalDate.now().month.value)}, ${LocalDate.now().dayOfMonth}/${LocalDateTime.now().year}"
-            today = LocalDate.now().month.value
+        val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            doOnCaseUnderMin()
         } else {
-            Log.e("Time:", "down sdk 24")
-            viewDataBinding.textViewDate.text =
-                "${DateTimeConverter.monthToString(Calendar.getInstance().time.month)}, ${Calendar.getInstance().time.day}/${Calendar.getInstance().time.year}"
-            today = Calendar.getInstance().time.month
+            doOnCaseUpMin()
         }
         viewDataBinding.viewPager.setCurrentItem(today - 1, true)
+    }
+
+    @SuppressLint("SetTextI18n")
+    @TargetApi(Build.VERSION_CODES.O)
+    private fun doOnCaseUnderMin(): Int {
+        viewDataBinding.textViewDate.text =
+            "${DateTimeConverter.monthToString(LocalDate.now().month.value)}, ${LocalDate.now().dayOfMonth}/${LocalDateTime.now().year}"
+        return LocalDate.now().month.value
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun doOnCaseUpMin(): Int {
+        viewDataBinding.textViewDate.text =
+            "${DateTimeConverter.monthToString(Calendar.getInstance().time.month)}, ${Calendar.getInstance().time.day}/${Calendar.getInstance().time.year}"
+        return Calendar.getInstance().time.month
     }
 
     private fun initViewPager() {
@@ -193,7 +206,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             tedPermission()
-
         } else {
             permission = true
         }

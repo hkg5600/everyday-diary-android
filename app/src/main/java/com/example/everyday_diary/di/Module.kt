@@ -14,14 +14,12 @@ import com.example.everyday_diary.ui.main.MainActivityViewModel
 import com.example.everyday_diary.ui.splash.SplashActivityViewModel
 import com.example.everyday_diary.ui.start.StartActivityViewModel
 import com.example.everyday_diary.utils.BASE_URL
-import com.example.everyday_diary.utils.TokenManager
-import okhttp3.OkHttpClient
+import com.example.everyday_diary.utils.TokenUtil
 import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 //val httpClient : OkHttpClient = OkHttpClient.Builder()
 //    .connectTimeout(60, TimeUnit.SECONDS) // connect timeout
@@ -66,7 +64,7 @@ var repositoryPart = module {
 }
 
 var tokenPart = module {
-    single { TokenManager(get(), get()) }
+    single { TokenUtil(get(), get()) }
 }
 
 var fragmentPart = module {

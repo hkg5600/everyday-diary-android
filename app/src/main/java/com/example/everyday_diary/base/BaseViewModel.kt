@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.everyday_diary.room.model.Token
 import com.example.everyday_diary.utils.SingleLiveEvent
-import com.example.everyday_diary.utils.TokenManager
+import com.example.everyday_diary.utils.TokenUtil
 import com.example.everyday_diary.network.response.Response
 import com.example.everyday_diary.network.response.TokenResponse
 import com.example.everyday_diary.utils.TokenObject
@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
 
 abstract class BaseViewModel : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
-    val tokenManager = TokenManager.getInstance()
+    private val tokenUtil = TokenUtil.getInstance()
 
     //success
     val tokenSuccess: SingleLiveEvent<Any> = SingleLiveEvent()
@@ -27,7 +27,7 @@ abstract class BaseViewModel : ViewModel() {
     val tokenError: SingleLiveEvent<String> = SingleLiveEvent()
     val roomError: SingleLiveEvent<String> = SingleLiveEvent()
     val error: SingleLiveEvent<String> = SingleLiveEvent()
-    val networkError : SingleLiveEvent<Any> = SingleLiveEvent()
+    val networkError: SingleLiveEvent<Any> = SingleLiveEvent()
 
     //data
     val message: SingleLiveEvent<String> = SingleLiveEvent()
@@ -60,10 +60,9 @@ abstract class BaseViewModel : ViewModel() {
 
     inner class MsgDisposableSingleObserver : DisposableSingleObserver<Any>() {
 
-        override fun onSuccess(t: Any) = filterResponseWithMsg(t)
+        override fun onSuccess(t: Any) = filterMsgFromResponse(t)
 
         override fun onError(e: Throwable) {
-            Log.d("Error Msg", "${e.message}")
             networkError.call()
         }
 
@@ -71,57 +70,52 @@ abstract class BaseViewModel : ViewModel() {
 
     inner class DataDisposableSingleObserver : DisposableSingleObserver<Any>() {
 
-        override fun onSuccess(t: Any) = filterResponseWithData(t)
+        override fun onSuccess(t: Any) = filterDataFromResponse(t)
 
         override fun onError(e: Throwable) {
-            Log.d("Error Data", "${e.message}")
             networkError.call()
         }
 
     }
 
-    fun filterResponseWithMsg(t: Any) {
+    private fun filterMsgFromResponse(t: Any) {
         t as retrofit2.Response<Response<String>>
         if (t.isSuccessful) {
-            if (t.body()?.status == 200)
-                message.value = t.body()?.message!!
-            else
-                error.value = t.body()?.message
-        } else if (t.code() == 401) {
-            Log.d("Error Token", "Token Error")
-            refreshToken()
-        } else {
-            Log.d("Error Body MSG", t.errorBody().toString())
-            error.value = "Server"
-        }
+            if (checkSuccess(t.body()?.status!!)) message.value = t.body()?.message!!
+            else setError(t.body()?.message!!)
+        } else checkError(t.code())
     }
 
-    fun filterResponseWithData(t: Any) {
+    private fun filterDataFromResponse(t: Any) {
         t as retrofit2.Response<Response<*>>
         if (t.isSuccessful) {
-            if (t.body()?.status == 200)
-                data.value = t.body()?.data!!
-            else
-                error.value = t.body()?.message
-        } else if (t.code() == 401) {
-            Log.d("Error Token", "Token Error")
-            refreshToken()
-        } else {
-            Log.d("Error Body DATA", t.errorBody().toString())
-            error.value = "Server"
-        }
+            if (checkSuccess(t.body()?.status!!)) data.value = t.body()?.data!!
+            else setError(t.body()?.message!!)
+        } else checkError(t.code())
+    }
+
+    private fun checkSuccess(status: Int) = status == 200
+
+    private fun checkError(code: Int) {
+        if (code == 401) refreshToken()
+        else setError("Server")
+    }
+
+    private fun setError(message: String) {
+        error.value = message
     }
 
     //Token
-    fun insertToken(token: Token) = addRoomDisposable(tokenManager?.insertToken(token)!!, "tokenData")
+    fun insertToken(token: Token) = addRoomDisposable(tokenUtil?.insertToken(token)!!, "tokenData")
 
-    fun getToken() =  compositeDisposable.add(
-        tokenManager?.getToken()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread()
+    fun getToken() = compositeDisposable.add(
+        tokenUtil?.getToken()?.subscribeOn(Schedulers.io())?.observeOn(
+            AndroidSchedulers.mainThread()
         )?.subscribeWith(TokenRoomDisposableSingleObserver())!!
     )
 
     fun refreshToken() {
-        addDisposable(tokenManager?.refreshToken(TokenObject.refreshToken!!)!!, getTokenObserver())
+        addDisposable(tokenUtil?.refreshToken(TokenObject.refreshToken!!)!!, getTokenObserver())
     }
 
     private fun getTokenObserver() = TokenDisposableSingleObserver()
@@ -134,7 +128,6 @@ abstract class BaseViewModel : ViewModel() {
         }
 
         override fun onError(e: Throwable) {
-            Log.d("Error", "${e.message}")
             tokenError.value = e.message
         }
     }
@@ -157,14 +150,11 @@ abstract class BaseViewModel : ViewModel() {
                         tokenChanged.value = false
                     }
                 }
-            } else {
-                Log.d("Error Body DATA", t.errorBody().toString())
-                error.value = "Server"
-            }
+            } else
+                setError("Server")
         }
 
         override fun onError(e: Throwable) {
-            Log.d("Error Data", "${e.message}")
             networkError.call()
         }
 

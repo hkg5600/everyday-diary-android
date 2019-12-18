@@ -8,7 +8,7 @@ import com.example.everyday_diary.network.reqeust.TokenRequest
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get
 
-class TokenManager(private val userService: UserService, val application: Application) {
+class TokenUtil(private val userService: UserService, application: Application) {
 
     init {
         useService = userService
@@ -16,11 +16,11 @@ class TokenManager(private val userService: UserService, val application: Applic
     }
 
     companion object : KoinComponent {
-        private var INSTANCE : TokenManager? = null
+        private var INSTANCE : TokenUtil? = null
         var tokenRepository : TokenRepository? = null
         var useService: UserService? = null
         @Synchronized
-        fun getInstance(): TokenManager? {
+        fun getInstance(): TokenUtil? {
             if (INSTANCE == null) {
                 INSTANCE = get()
             }
