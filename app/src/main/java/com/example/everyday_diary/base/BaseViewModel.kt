@@ -12,6 +12,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
@@ -54,9 +55,8 @@ abstract class BaseViewModel : ViewModel() {
             )
         )
     }
-
-    fun getMsgObserver() = MsgDisposableSingleObserver()
     fun getDataObserver() = DataDisposableSingleObserver()
+    fun getMsgObserver() = MsgDisposableSingleObserver()
 
     inner class MsgDisposableSingleObserver : DisposableSingleObserver<Any>() {
 

@@ -15,18 +15,18 @@ import retrofit2.http.POST
 
 interface UserApi {
 
-    @POST("/diary/login/")
+    @POST("/api/diary/login/")
     fun login(@Body login: LoginRequest) : Single<retrofit2.Response<Response<LoginResponse>>>
 
-    @POST("/diary/verify/")
+    @POST("/api/diary/verify/")
     fun verifyToken(@Body token: TokenRequest) : Single<retrofit2.Response<Response<Any>>>
 
-    @POST("/diary/refresh/")
+    @POST("/api/diary/refresh/")
     fun refreshToken(@Body token: TokenRequest) : Single<retrofit2.Response<Response<TokenResponse>>>
 
-    @GET("/diary/user/")
+    @GET("/api/diary/user/")
     fun getUserInfo(@Header("Authorization") token: String) : Single<retrofit2.Response<Response<UserInfoResponse>>>
 
-    @POST("/diary/join/")
+    @POST("/api/diary/join/")
     fun join(@Body register: RegisterRequest) : Single<retrofit2.Response<Response<Any>>>
 }
