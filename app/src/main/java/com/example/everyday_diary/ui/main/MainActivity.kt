@@ -48,6 +48,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         initViewPager()
         initMonthView()
         setViewPagerPos()
+        viewDataBinding.activity = this
     }
 
     override fun initObserver() {

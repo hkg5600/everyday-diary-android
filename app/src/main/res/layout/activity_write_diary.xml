@@ -85,6 +85,7 @@
                     android:textSize="24sp"
                     android:textColor="#312f36"
                     android:hint="Title"
+                    android:singleLine="true"
                     android:background="@android:color/transparent"/>
 
                 <EditText

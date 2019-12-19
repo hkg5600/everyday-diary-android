@@ -4,7 +4,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
 
         <LinearLayout
             android:layout_centerInParent="true"
@@ -43,7 +44,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_cancel"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:clickable="true"/>
+                    android:clickable="true"
+                    android:focusable="true" />
 
                 <TextView
                     android:id="@+id/text_cancel"
@@ -58,7 +60,8 @@
                     app:layout_constraintEnd_toStartOf="@+id/text_ok"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:clickable="true"/>
+                    android:clickable="true"
+                    android:focusable="true" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </RelativeLayout>

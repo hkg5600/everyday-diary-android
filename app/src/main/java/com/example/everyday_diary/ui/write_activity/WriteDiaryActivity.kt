@@ -1,9 +1,12 @@
 package com.example.everyday_diary.ui.write_activity
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.example.everyday_diary.R
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
@@ -14,10 +17,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_write_diary
     override val viewModel: WriteDiaryActivityViewModel by viewModel()
-
+    lateinit var dialog: Dialog
+    lateinit var customDialogBinding: CustomDialogBinding
     override fun initView() {
         initActionBar()
-        initDialog()
+        initDialog("TEST")
+        dialog.show()
     }
 
     override fun initObserver() {
@@ -32,13 +37,13 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
 
     }
 
-    private fun initDialog() {
+    private fun initDialog(dialogText: String) {
         val customDialog = layoutInflater.inflate(R.layout.custom_dialog, null)
-        val customDialogBinding = CustomDialogBinding.inflate(layoutInflater, customDialog as ViewGroup, false)
-        val dialog = Dialog(this)
+        customDialogBinding = CustomDialogBinding.inflate(layoutInflater, customDialog as ViewGroup, false)
+        dialog = Dialog(this)
         dialog.setContentView(customDialogBinding.root)
-        customDialogBinding.textView.text = "TEST"
-        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        customDialogBinding.textView.text = dialogText
     }
 
     private fun initActionBar() {
