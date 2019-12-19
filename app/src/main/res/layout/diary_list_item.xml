@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools">
-    
+
     <data>
+
         <variable
             name="item"
-            type="com.example.everyday_diary.network.model.Diary" />
+            type="com.example.everyday_diary.adapter.DiaryListAdapter.Diary" />
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,14 +38,28 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="50dp"
                     android:layout_marginEnd="30dp"
-                    android:layout_marginBottom="50dp"
                     android:textColor="#312f36"
                     android:textSize="22sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/text_view_week_of_day"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tool:text="8" />
+                    tool:text="8"
+                    android:text="@{item.day}"/>
+
+                <TextView
+                    android:id="@+id/text_view_week_of_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="50dp"
+                    android:textColor="#312f36"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_date"
+                    tool:text="test"
+                    android:text="@{item.dayOfWeek}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -81,7 +96,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tool:text="This is title" />
+                        tool:text="This is title"
+                        android:text="@{item.title}"/>
 
                     <TextView
                         android:id="@+id/text_view_description"
@@ -97,7 +113,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/text_view_title"
-                        tool:text="This is description" />
+                        tool:text="This is description"
+                        android:text="@{item.text}"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -3,24 +3,37 @@ package com.example.everyday_diary.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.everyday_diary.R
 import com.example.everyday_diary.databinding.DiaryListItemBinding
-import com.example.everyday_diary.network.model.Diary
 import com.example.everyday_diary.utils.BASE_URL
+import com.example.everyday_diary.utils.DateTimeConverter
 import kotlinx.android.synthetic.main.diary_list_item.view.*
 
 class DiaryListAdapter : RecyclerView.Adapter<DiaryListAdapter.DiaryListHolder>() {
 
+    data class Diary(
+        val id: Int,
+        val image: String,
+        val title: String,
+        val text: String,
+        val day: String,
+        val dayOfWeek: String
+    )
+
     val diaryList = ArrayList<Diary>()
 
-    fun setDiaryList(diaryList: ArrayList<Diary>) {
+    fun setDiaryList(diaryList: ArrayList<com.example.everyday_diary.network.model.Diary>) {
         this.diaryList.clear()
-        //this.diaryList.addAll(diaryList.map { it.created_at = "8" })
+        this.diaryList.addAll(with(diaryList) {
+            ArrayList(this.map {
+                Diary(it.id, it.images[0].image, it.title, it.text, DateTimeConverter.dateTimeToDay(it.created_at), DateTimeConverter.getWeekOfDate(it.created_at))
+            })
+        })
+
         notifyDataSetChanged()
     }
 
@@ -45,10 +58,10 @@ class DiaryListAdapter : RecyclerView.Adapter<DiaryListAdapter.DiaryListHolder>(
 
         fun bind(item: Diary) {
             itemView.run {
-                if (item.images.isNotEmpty()) {
+                if (item.image.isNotEmpty()) {
                     textHolder.visibility = View.GONE
                     imageHolder.visibility = View.VISIBLE
-                    Glide.with(context).load(BASE_URL + item.images[0]).into(image_view)
+                    Glide.with(context).load(BASE_URL + item.image).into(image_view)
                 }
             }
             binding.item = item
