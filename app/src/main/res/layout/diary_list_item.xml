@@ -13,9 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
-        app:cardElevation="10dp">
+        android:layout_marginBottom="30dp"
+        app:cardElevation="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/holder_layout"
@@ -39,28 +40,29 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="40dp"
                     android:layout_marginEnd="30dp"
+                    android:text="@{item.day}"
                     android:textColor="#312f36"
                     android:textSize="22sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/text_view_week_of_day"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tool:text="8"
-                    android:text="@{item.day}"/>
+                    tool:text="8" />
 
                 <TextView
                     android:id="@+id/text_view_week_of_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="50dp"
+                    android:text="@{item.dayOfWeek}"
                     android:textColor="#312f36"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_date"
-                    tool:text="test"
-                    android:text="@{item.dayOfWeek}"/>
+                    tool:text="test" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -91,14 +93,14 @@
                         android:layout_marginTop="30dp"
                         android:layout_marginEnd="20dp"
                         android:singleLine="true"
+                        android:text="@{item.title}"
                         android:textColor="#312f36"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tool:text="This is title"
-                        android:text="@{item.title}"/>
+                        tool:text="This is title" />
 
                     <TextView
                         android:id="@+id/text_view_description"
@@ -108,14 +110,14 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="10dp"
+                        android:text="@{item.text}"
                         android:textColor="#312f36"
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/text_view_title"
-                        tool:text="This is description"
-                        android:text="@{item.text}"/>
+                        tool:text="This is description" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
