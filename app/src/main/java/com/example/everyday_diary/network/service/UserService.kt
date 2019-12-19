@@ -9,13 +9,16 @@ import com.example.everyday_diary.network.response.Response
 import com.example.everyday_diary.network.response.TokenResponse
 import com.example.everyday_diary.network.response.UserInfoResponse
 import io.reactivex.Single
+import okhttp3.MultipartBody
+import retrofit2.http.Multipart
 
 interface UserService {
-    fun login(loginRequest: LoginRequest) : Single<retrofit2.Response<Response<LoginResponse>>>
-    fun verifyToken(tokenRequest: TokenRequest) : Single<retrofit2.Response<Response<Any>>>
-    fun refreshToken(tokenRequest: TokenRequest) : Single<retrofit2.Response<Response<TokenResponse>>>
-    fun getUserInfo(token: String) : Single<retrofit2.Response<Response<UserInfoResponse>>>
+    fun login(loginRequest: LoginRequest): Single<retrofit2.Response<Response<LoginResponse>>>
+    fun verifyToken(tokenRequest: TokenRequest): Single<retrofit2.Response<Response<Any>>>
+    fun refreshToken(tokenRequest: TokenRequest): Single<retrofit2.Response<Response<TokenResponse>>>
+    fun getUserInfo(token: String): Single<retrofit2.Response<Response<UserInfoResponse>>>
     fun join(registerRequest: RegisterRequest): Single<retrofit2.Response<Response<Any>>>
+
 }
 
 class UserServiceImpl(private val api: UserApi) : UserService {

@@ -33,19 +33,25 @@ import kotlin.collections.ArrayList
 import kotlin.math.abs
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.network.response.MonthCount
+import com.example.everyday_diary.network.response.UserInfoResponse
 import com.example.everyday_diary.ui.write_activity.WriteDiaryActivity
+import com.example.travelercommunityapp.utils.UserObject
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_main
     override val viewModel: MainActivityViewModel by viewModel()
     private var permission: Boolean = false
     private val monthAdapter: MonthAdapter by inject()
+    var monthOfToday = 0
 
     override fun initView() {
+        viewDataBinding.buttonWrite.isEnabled = false
         checkPermission()
         initActionBar()
         initNavigation()
         initViewPager()
+        setMonthOfToday()
         initMonthView()
         setViewPagerPos()
         viewDataBinding.activity = this
@@ -60,6 +66,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                         data.progress = "${it.count[data.month - 1]}/${data.total}"
                         monthAdapter.notifyDataSetChanged()
                     }
+                }
+
+                is UserInfoResponse -> {
+                    UserObject.user = it.user
+                    viewDataBinding.buttonWrite.isEnabled = true
                 }
             }
         })
@@ -81,11 +92,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
 
     override fun initViewModel() {
+        viewModel.getUserInfo()
         viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
     }
 
     fun startWriteActivity() {
-        startActivity(Intent(this, WriteDiaryActivity::class.java))
+        startActivity(
+            Intent(this@MainActivity, WriteDiaryActivity::class.java)
+                .putExtra("month", monthOfToday.toString())
+                .putExtra("year", viewDataBinding.textViewYear.text)
+        )
     }
 
     private fun initActionBar() {
@@ -93,13 +109,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         setSupportActionBar(toolbar)
     }
 
-    private fun setViewPagerPos() {
-        val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    private fun setMonthOfToday() {
+        monthOfToday = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getMonthWIthUpApi()
         } else {
             getMonthWIthUnderApi()
         }
-        viewDataBinding.viewPager.setCurrentItem(today - 1, true)
+    }
+
+    private fun setViewPagerPos() {
+        viewDataBinding.viewPager.setCurrentItem(monthOfToday - 1, true)
     }
 
     @SuppressLint("SetTextI18n")

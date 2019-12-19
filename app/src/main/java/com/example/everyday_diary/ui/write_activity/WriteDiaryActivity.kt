@@ -11,7 +11,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.example.everyday_diary.R
+import com.example.everyday_diary.adapter.DiaryWriteImageAdapter
 import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
@@ -32,11 +34,13 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     lateinit var dialog: Dialog
     lateinit var customDialogBinding: CustomDialogBinding
     private var isOpen = false
-
+    private val diaryWriteImageAdapter: DiaryWriteImageAdapter by inject()
     override fun initView() {
         initActionBar()
         initDialog("Do you want to exit?")
         initRecyclerView()
+        initViewPager()
+        setDateData()
         viewDataBinding.activity = this
         viewDataBinding.vm = viewModel
     }
@@ -52,6 +56,10 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
             else
                 "${imageAdapter.selectedImageList.size} selected"
             invalidateOptionsMenu()
+        })
+
+        diaryWriteImageAdapter.showGalleryImage.observe(this, Observer {
+            showImageList()
         })
     }
 
@@ -77,22 +85,56 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         imageAdapter.setImage(viewModel.getImageFromGallery(this))
     }
 
-    fun showOnImageList() {
-        title = "Gallery Image"
+    private fun setDateData() {
+        val month = intent.getStringExtra("month")
+        val year = intent.getStringExtra("year")
+        if (month == null || year == null)
+            finish()
+        else {
+            viewModel.month = month
+            viewModel.year = year
+        }
+    }
+
+    fun setViewPagerImage() {
+        if (imageAdapter.selectedImageList.isEmpty())
+            hideSelectedImage()
+        else {
+            diaryWriteImageAdapter.setImageList(imageAdapter.selectedImageList)
+            showSelectedImage()
+        }
+        hideImageList()
+    }
+
+    private fun showSelectedImage() {
+        viewDataBinding.viewPager.visibility = View.VISIBLE
+        viewDataBinding.wormDotsIndicator.visibility = View.VISIBLE
+    }
+
+    private fun hideSelectedImage() {
+        viewDataBinding.viewPager.visibility = View.GONE
+        viewDataBinding.wormDotsIndicator.visibility = View.GONE
+    }
+
+    fun showImageList() {
+        if (imageAdapter.selectedImageList.isNotEmpty())
+            title = "${imageAdapter.selectedImageList.size} selected"
+        else
+            title = "Gallery Image"
         invalidateOptionsMenu()
         isOpen = true
         setHomeDrawable()
         viewDataBinding.galleryImageHolder.run {
             visibility = View.VISIBLE
-            startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show_on))
+            startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show))
         }
         viewDataBinding.fabClose.run {
             visibility = View.VISIBLE
-            startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show_on))
+            startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show))
         }
     }
 
-    fun showOffImageList() {
+    private fun hideImageList() {
         imageAdapter.isClosing = true
         title = ""
         invalidateOptionsMenu()
@@ -100,7 +142,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         setHomeDrawable()
         viewDataBinding.fabClose.visibility = View.GONE
         viewDataBinding.galleryImageHolder.run {
-            val animation = AnimationUtils.loadAnimation(context, R.anim.gallery_image_show_off)
+            val animation = AnimationUtils.loadAnimation(context, R.anim.gallery_image_hide)
             animation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(animation: Animation?) {}
                 override fun onAnimationEnd(animation: Animation?) {
@@ -154,7 +196,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         when (item.itemId) {
             android.R.id.home -> checkBackMode(!isOpen)
             R.id.menu_save -> {
-
+                viewModel.writeDiary()
             }
             R.id.menu_clear -> {
                 imageAdapter.clearValue()
@@ -165,7 +207,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         return super.onOptionsItemSelected(item)
     }
 
-    private fun checkBackMode(isExit: Boolean) = if (isExit) dialog.show() else showOffImageList()
+    private fun checkBackMode(isExit: Boolean) = if (isExit) dialog.show() else hideImageList()
 
 
     private fun initRecyclerView() {
@@ -188,28 +230,11 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         checkBackMode(!isOpen)
     }
 
-    private fun loadFile() {
-        if (imageAdapter.selectedImageList.isNotEmpty()) {
-            imageAdapter.selectedImageList.run {
-                this.forEach {
-                    val file = File(
-                        FileManager.getRealPathFromURI(
-                            Uri.parse(it.uri),
-                            applicationContext
-                        )!!
-                    )
-                    if (file.exists()) {
-                        val requestFile =
-                            RequestBody.create(MediaType.parse("multipart/form-data"), file)
-                        val multipartData = MultipartBody.Part.createFormData(
-                            "image_${this.indexOf(it)}",
-                            "file.jpg",
-                            requestFile
-                        )
-                        viewModel.file.add(multipartData)
-                    }
-                }
-            }
+    private fun initViewPager() {
+        viewDataBinding.viewPager.apply {
+            adapter = diaryWriteImageAdapter
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            viewDataBinding.wormDotsIndicator.setViewPager2(viewDataBinding.viewPager)
         }
     }
 }

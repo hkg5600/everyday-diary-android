@@ -1,6 +1,7 @@
 package com.example.everyday_diary.di
 
 import com.example.everyday_diary.adapter.DiaryListAdapter
+import com.example.everyday_diary.adapter.DiaryWriteImageAdapter
 import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.adapter.MonthAdapter
 import com.example.everyday_diary.network.api.DiaryApi
@@ -56,13 +57,14 @@ var viewModelPart = module {
     viewModel { MainActivityViewModel(get()) }
     viewModel { LoginFragmentViewModel(get()) }
     viewModel { DiaryListActivityViewModel(get()) }
-    viewModel { WriteDiaryActivityViewModel() }
+    viewModel { WriteDiaryActivityViewModel(get()) }
 }
 
 var adapterPart = module {
     factory { MonthAdapter() }
     factory { DiaryListAdapter() }
     factory { GalleryImageAdapter() }
+    factory { DiaryWriteImageAdapter() }
 }
 
 var repositoryPart = module {
