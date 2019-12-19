@@ -5,7 +5,7 @@ data class Diary(
     val images: ArrayList<Image>,
     val title: String,
     val text: String,
-    val created_at: String,
+    var created_at: String,
     val month: Int,
     val year: Int,
     val owner: String

@@ -3,11 +3,13 @@ package com.example.everyday_diary.ui.diary_list
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.R
+import com.example.everyday_diary.adapter.DiaryListAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityDiaryListBinding
 import com.example.everyday_diary.network.response.DiaryListResponse
 import com.example.everyday_diary.utils.DateTimeConverter
 import kotlinx.android.synthetic.main.app_bar.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivityViewModel>() {
@@ -15,22 +17,24 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
     override val layoutResourceId = R.layout.activity_diary_list
     override val viewModel: DiaryListActivityViewModel by viewModel()
 
+    private val diaryListAdapter: DiaryListAdapter by inject()
+
     override fun initView() {
         initActionBar()
     }
 
     override fun initObserver() {
-
-    }
-
-    override fun initListener() {
         viewModel.data.observe(this, Observer {
             when (it) {
                 is DiaryListResponse -> {
-
+                    diaryListAdapter.setDiaryList(it.diary)
                 }
             }
         })
+    }
+
+    override fun initListener() {
+
     }
 
     override fun initViewModel() {
