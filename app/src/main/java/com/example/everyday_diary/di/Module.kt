@@ -14,6 +14,7 @@ import com.example.everyday_diary.ui.login.LoginFragmentViewModel
 import com.example.everyday_diary.ui.main.MainActivityViewModel
 import com.example.everyday_diary.ui.splash.SplashActivityViewModel
 import com.example.everyday_diary.ui.start.StartActivityViewModel
+import com.example.everyday_diary.ui.write_activity.WriteDiaryActivityViewModel
 import com.example.everyday_diary.utils.BASE_URL
 import com.example.everyday_diary.utils.TokenUtil
 import org.koin.androidx.viewmodel.ext.koin.viewModel
@@ -54,6 +55,7 @@ var viewModelPart = module {
     viewModel { MainActivityViewModel(get()) }
     viewModel { LoginFragmentViewModel(get()) }
     viewModel { DiaryListActivityViewModel(get()) }
+    viewModel { WriteDiaryActivityViewModel() }
 }
 
 var adapterPart = module {

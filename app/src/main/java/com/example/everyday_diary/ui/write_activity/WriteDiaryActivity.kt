@@ -24,7 +24,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     override fun initViewModel() {
-        
+
     }
 
 
