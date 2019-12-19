@@ -1,6 +1,7 @@
 package com.example.everyday_diary.di
 
 import com.example.everyday_diary.adapter.DiaryListAdapter
+import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.adapter.MonthAdapter
 import com.example.everyday_diary.network.api.DiaryApi
 import com.example.everyday_diary.network.api.UserApi
@@ -61,6 +62,7 @@ var viewModelPart = module {
 var adapterPart = module {
     factory { MonthAdapter() }
     factory { DiaryListAdapter() }
+    factory { GalleryImageAdapter() }
 }
 
 var repositoryPart = module {
