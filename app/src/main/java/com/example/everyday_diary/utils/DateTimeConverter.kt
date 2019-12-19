@@ -66,14 +66,14 @@ object DateTimeConverter {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getWeekOfDateFromLocalDate(LocalDate.parse(stringDate)).substring(0, 3)
         } else {
-            getWeeokOfDateFromDate(SimpleDateFormat("yyy-MM-dd").parse(stringDate)).substring(0, 3)
+            getWeekOfDateFromDate(SimpleDateFormat("yyy-MM-dd").parse(stringDate)).substring(0, 3)
         }
     }
 
     @TargetApi(Build.VERSION_CODES.O)
     private fun getWeekOfDateFromLocalDate(date: LocalDate) = date.dayOfWeek.toString()
 
-    private fun getWeeokOfDateFromDate(date: Date): String {
+    private fun getWeekOfDateFromDate(date: Date): String {
         val calendar = Calendar.getInstance()
         calendar.time = date
         return calendar.get(Calendar.DAY_OF_WEEK).toString()

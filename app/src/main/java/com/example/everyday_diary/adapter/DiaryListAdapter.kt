@@ -29,10 +29,18 @@ class DiaryListAdapter : RecyclerView.Adapter<DiaryListAdapter.DiaryListHolder>(
     fun setDiaryList(diaryList: ArrayList<com.example.everyday_diary.network.model.Diary>) {
         this.diaryList.clear()
         this.diaryList.addAll(with(diaryList) {
-            ArrayList(this.map {
-                Diary(it.id, it.images[0].image, it.title, it.text, DateTimeConverter.dateTimeToDay(it.created_at), DateTimeConverter.getWeekOfDate(it.created_at))
+            ArrayList(this.map { diary ->
+                Diary(
+                    diary.id,
+                    if (diary.images.isEmpty()) "" else diary.images[0].image,
+                    diary.title,
+                    diary.text,
+                    DateTimeConverter.dateTimeToDay(diary.created_at),
+                    DateTimeConverter.getWeekOfDate(diary.created_at)
+                )
             })
         })
+
         notifyDataSetChanged()
     }
 
