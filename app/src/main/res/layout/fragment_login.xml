@@ -92,7 +92,7 @@
             android:adjustViewBounds="true"
             android:scaleType="center"
             android:src="@drawable/ic_execute"
-            android:onClick="@{() -> vm.login()}"/>
+            android:onClick="@{() -> vm.login()}" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -75,7 +75,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                         .putExtra("year", viewDataBinding.textViewYear.text)
                 )
             }
-
         }
     }
 

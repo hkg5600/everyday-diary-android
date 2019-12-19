@@ -33,7 +33,6 @@ class DiaryListAdapter : RecyclerView.Adapter<DiaryListAdapter.DiaryListHolder>(
                 Diary(it.id, it.images[0].image, it.title, it.text, DateTimeConverter.dateTimeToDay(it.created_at), DateTimeConverter.getWeekOfDate(it.created_at))
             })
         })
-
         notifyDataSetChanged()
     }
 

@@ -21,6 +21,7 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
 
     override fun initView() {
         initActionBar()
+        initRecyclerView()
     }
 
     override fun initObserver() {
@@ -40,18 +41,18 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
     override fun initViewModel() {
         val (month, year) = getExtras()
         setTitle(month, year)
-        viewModel.getDiaryByDate(DateTimeConverter.stringToMonth(month), year)
+        viewModel.getDiaryByDate(DateTimeConverter.stringToMonth(month), Integer.parseInt(year))
     }
 
-    private fun getExtras(): Pair<String, Int> {
+    private fun getExtras(): Pair<String, String> {
         val month = intent.getStringExtra("month")
-        val year = intent.getIntExtra("year", -1)
-        if (month == null || year == -1)
+        val year = intent.getStringExtra("year")
+        if (month == null || year == null)
             finish()
         return Pair(month, year)
     }
 
-    private fun setTitle(month: String, year: Int) {
+    private fun setTitle(month: String, year: String) {
         title = "$month / $year"
     }
 
@@ -66,6 +67,13 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
             android.R.id.home -> finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun initRecyclerView() {
+        viewDataBinding.recyclerView.apply {
+            setHasFixedSize(true)
+            adapter = diaryListAdapter
+        }
     }
 
 }
