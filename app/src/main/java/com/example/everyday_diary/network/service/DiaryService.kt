@@ -12,6 +12,6 @@ interface DiaryService {
 }
 
 class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
-    override fun getDiaryByMonth(token: String, id: Int) = api.getDiaryByMonth(token, "/api/diary/diary-month/$id/")
+    override fun getDiaryByMonth(token: String, id: Int) = api.getDiaryByDate(token, "/api/diary/diary-month/$id/")
     override fun getDiaryCount(token: String, id: Int) = api.getDiaryCount(token, "/api/diary/month/$id/")
 }

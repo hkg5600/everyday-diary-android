@@ -14,5 +14,5 @@ interface DiaryApi {
     fun getDiaryCount(@Header("Authorization") token: String, @Url url: String) : Single<retrofit2.Response<Response<MonthCount>>>
 
     @GET
-    fun getDiaryByMonth(@Header("Authorization") token: String, @Url url: String) : Single<retrofit2.Response<Response<DiaryListResponse>>>
+    fun getDiaryByDate(@Header("Authorization") token: String, @Url url: String) : Single<retrofit2.Response<Response<DiaryListResponse>>>
 }

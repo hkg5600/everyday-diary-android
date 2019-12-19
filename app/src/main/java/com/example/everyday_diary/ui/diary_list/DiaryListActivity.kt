@@ -37,6 +37,8 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
         }
     }
 
+
+
     private fun initActionBar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
