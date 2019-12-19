@@ -1,5 +1,6 @@
 package com.example.everyday_diary.network.api
 
+import com.example.everyday_diary.network.response.DiaryListResponse
 import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.Response
 import io.reactivex.Single
@@ -11,4 +12,7 @@ interface DiaryApi {
 
     @GET
     fun getDiaryCount(@Header("Authorization") token: String, @Url url: String) : Single<retrofit2.Response<Response<MonthCount>>>
+
+    @GET
+    fun getDiaryByMonth(@Header("Authorization") token: String, @Url url: String) : Single<retrofit2.Response<Response<DiaryListResponse>>>
 }
