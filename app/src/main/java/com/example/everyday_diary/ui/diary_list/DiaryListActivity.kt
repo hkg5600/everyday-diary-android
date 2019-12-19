@@ -7,10 +7,10 @@ import com.example.everyday_diary.databinding.ActivityDiaryListBinding
 import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivitViewModel>() {
+class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivityViewModel>() {
 
     override val layoutResourceId = R.layout.activity_diary_list
-    override val viewModel: DiaryListActivitViewModel by viewModel()
+    override val viewModel: DiaryListActivityViewModel by viewModel()
 
     override fun initView() {
         initActionBar()

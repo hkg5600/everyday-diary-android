@@ -7,7 +7,7 @@ import com.example.everyday_diary.network.service.DiaryService
 import com.example.everyday_diary.network.service.DiaryServiceImpl
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.network.service.UserServiceImpl
-import com.example.everyday_diary.ui.diary_list.DiaryListActivitViewModel
+import com.example.everyday_diary.ui.diary_list.DiaryListActivityViewModel
 import com.example.everyday_diary.ui.login.LoginFragment
 import com.example.everyday_diary.ui.login.LoginFragmentViewModel
 import com.example.everyday_diary.ui.main.MainActivityViewModel
@@ -52,7 +52,7 @@ var viewModelPart = module {
     viewModel { StartActivityViewModel() }
     viewModel { MainActivityViewModel(get()) }
     viewModel { LoginFragmentViewModel(get()) }
-    viewModel { DiaryListActivitViewModel() }
+    viewModel { DiaryListActivityViewModel(get()) }
 }
 
 var adapterPart = module {
