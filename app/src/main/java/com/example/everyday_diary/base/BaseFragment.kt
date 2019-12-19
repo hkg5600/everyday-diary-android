@@ -38,20 +38,20 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutResourceId, container, false)
         viewDataBinding.executePendingBindings()
         viewModel.networkError.observe(viewLifecycleOwner, Observer {
-            makeToast("네트워크 연결 상태를 확인해 주세요", false)
+            makeToast("check your network connection", false)
             activity?.recreate()
         })
         viewModel.tokenChanged.observe(viewLifecycleOwner, Observer {
             if (it) {
                 activity?.recreate()
             } else {
-                makeToast("refresh token", true)
+                makeToast("please sign in", true)
                 startActivity(Intent(activity?.applicationContext, StartActivity::class.java))
                 activity?.finish()
             }
         })
 
-//BaseFragment
+        //BaseFragment
         initView()
         initObserver()
         initListener()

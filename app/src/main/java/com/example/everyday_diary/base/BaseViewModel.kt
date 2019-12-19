@@ -34,9 +34,10 @@ abstract class BaseViewModel : ViewModel() {
     val message: SingleLiveEvent<String> = SingleLiveEvent()
     val data: SingleLiveEvent<Any> = SingleLiveEvent()
     val tokenChanged: SingleLiveEvent<Boolean> = SingleLiveEvent()
-
+    val loading: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
     fun addDisposable(disposable: Single<*>, observer: DisposableSingleObserver<Any>) {
+        loading.value = true
         compositeDisposable.add(
             disposable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(observer)
@@ -44,6 +45,7 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     fun addRoomDisposable(disposable: Completable, msg: String) {
+        loading.value = true
         compositeDisposable.add(
             disposable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
                 {
@@ -55,12 +57,15 @@ abstract class BaseViewModel : ViewModel() {
             )
         )
     }
+
     fun getDataObserver() = DataDisposableSingleObserver()
     fun getMsgObserver() = MsgDisposableSingleObserver()
 
     inner class MsgDisposableSingleObserver : DisposableSingleObserver<Any>() {
 
-        override fun onSuccess(t: Any) = filterMsgFromResponse(t)
+        override fun onSuccess(t: Any) {
+            filterMsgFromResponse(t)
+        }
 
         override fun onError(e: Throwable) {
             networkError.call()
@@ -75,10 +80,10 @@ abstract class BaseViewModel : ViewModel() {
         override fun onError(e: Throwable) {
             networkError.call()
         }
-
     }
 
     private fun filterMsgFromResponse(t: Any) {
+        loading.value = false
         t as retrofit2.Response<Response<String>>
         if (t.isSuccessful) {
             if (checkSuccess(t.body()?.status!!)) message.value = t.body()?.message!!
@@ -87,6 +92,7 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     private fun filterDataFromResponse(t: Any) {
+        loading.value = false
         t as retrofit2.Response<Response<*>>
         if (t.isSuccessful) {
             if (checkSuccess(t.body()?.status!!)) data.value = t.body()?.data!!
@@ -106,15 +112,22 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     //Token
-    fun insertToken(token: Token) = addRoomDisposable(tokenUtil?.insertToken(token)!!, "tokenData")
+    fun insertToken(token: Token) {
+        loading.value = true
+        addRoomDisposable(tokenUtil?.insertToken(token)!!, "tokenData")
+    }
 
-    fun getToken() = compositeDisposable.add(
-        tokenUtil?.getToken()?.subscribeOn(Schedulers.io())?.observeOn(
-            AndroidSchedulers.mainThread()
-        )?.subscribeWith(TokenRoomDisposableSingleObserver())!!
-    )
+    fun getToken() {
+        loading.value = true
+        compositeDisposable.add(
+            tokenUtil?.getToken()?.subscribeOn(Schedulers.io())?.observeOn(
+                AndroidSchedulers.mainThread()
+            )?.subscribeWith(TokenRoomDisposableSingleObserver())!!
+        )
+    }
 
     fun refreshToken() {
+        loading.value = true
         addDisposable(tokenUtil?.refreshToken(TokenObject.refreshToken!!)!!, getTokenObserver())
     }
 
@@ -122,12 +135,14 @@ abstract class BaseViewModel : ViewModel() {
 
     inner class TokenRoomDisposableSingleObserver : DisposableSingleObserver<Token>() {
         override fun onSuccess(t: Token) {
+            loading.value = false
             TokenObject.token = t.token
             TokenObject.refreshToken = t.refreshToken
             tokenSuccess.call()
         }
 
         override fun onError(e: Throwable) {
+            loading.value = false
             tokenError.value = e.message
         }
     }
@@ -135,6 +150,7 @@ abstract class BaseViewModel : ViewModel() {
     inner class TokenDisposableSingleObserver : DisposableSingleObserver<Any>() {
 
         override fun onSuccess(t: Any) {
+            loading.value = false
             t as retrofit2.Response<Response<TokenResponse>>
             if (t.isSuccessful) {
                 when (t.body()?.status) {
@@ -155,6 +171,7 @@ abstract class BaseViewModel : ViewModel() {
         }
 
         override fun onError(e: Throwable) {
+            loading.value = false
             networkError.call()
         }
 

@@ -32,20 +32,15 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     override val layoutResourceId = R.layout.activity_write_diary
     override val viewModel: WriteDiaryActivityViewModel by viewModel()
     private val imageAdapter: GalleryImageAdapter by inject()
-    lateinit var loadingDialog: Dialog
-    lateinit var loadingDialogBinding: LoadingDialogBinding
     private lateinit var dialog: Dialog
     lateinit var customDialogBinding: CustomDialogBinding
     private var isOpen = false
     private val diaryWriteImageAdapter: DiaryWriteImageAdapter by inject()
-    private var titleFocus = false
-    private var textFocus = false
 
     override fun initView() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         initActionBar()
         initDialog("Do you want to exit?")
-        initLoading()
         initRecyclerView()
         initViewPager()
         setDateData()
@@ -81,6 +76,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         })
 
         viewModel.networkError.observe(this, Observer {
+            makeToast("check your network connection", false)
             loadingDialog.dismiss()
             finish()
         })
@@ -182,15 +178,6 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         }
     }
 
-    private fun initLoading() {
-        val loading = layoutInflater.inflate(R.layout.loading_dialog, null)
-        loadingDialogBinding =
-            LoadingDialogBinding.inflate(layoutInflater, loading as ViewGroup, false)
-        loadingDialog = Dialog(this)
-        loadingDialog.setContentView(loadingDialogBinding.root)
-        loadingDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        loadingDialog.setCancelable(false)
-    }
 
     private fun initDialog(dialogText: String) {
         val customDialog = layoutInflater.inflate(R.layout.custom_dialog, null)

@@ -1,8 +1,11 @@
 package com.example.everyday_diary.base
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -12,6 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.example.everyday_diary.databinding.LoadingDialogBinding
 import com.example.everyday_diary.ui.start.StartActivity
 
 abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatActivity() {
@@ -32,19 +36,24 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
 
     private var isSetBackButtonValid = false
 
+    lateinit var loadingDialog: Dialog
+
+    lateinit var loadingDialogBinding: LoadingDialogBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
         viewDataBinding.executePendingBindings()
 
+        initLoading()
         initView()
         initObserver()
         initListener()
         initViewModel()
 
         viewModel.networkError.observe(this, Observer {
-            makeToast("네트워크 연결 상태를 확인해 주세요", false)
+            makeToast("check your network connection", false)
             startActivity((Intent(this, this::class.java)).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
         })
 
@@ -52,11 +61,27 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
             if (it) {
                 startActivity((Intent(this, this::class.java)).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
             } else {
-                makeToast("refresh token", true)
+                makeToast("please sign in", true)
                 startActivity(Intent(this, StartActivity::class.java))
                 finish()
             }
         })
+
+        viewModel.loading.observe(this, Observer {
+            if (it)
+                loadingDialog.show()
+            else
+                loadingDialog.dismiss()
+        })
+    }
+
+    private fun initLoading() {
+        val loading = layoutInflater.inflate(com.example.everyday_diary.R.layout.loading_dialog, null)
+        loadingDialogBinding = LoadingDialogBinding.inflate(layoutInflater, loading as ViewGroup, false)
+        loadingDialog = Dialog(this)
+        loadingDialog.setContentView(loadingDialogBinding.root)
+        loadingDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        loadingDialog.setCancelable(false)
     }
 
     fun Fragment.hideKeyboard() {
