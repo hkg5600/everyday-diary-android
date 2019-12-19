@@ -4,6 +4,7 @@ import android.view.MenuItem
 import com.example.everyday_diary.R
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityDiaryListBinding
+import com.example.everyday_diary.utils.DateTimeConverter
 import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -14,7 +15,6 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
 
     override fun initView() {
         initActionBar()
-        setTitle()
     }
 
     override fun initObserver() {
@@ -26,18 +26,22 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
     }
 
     override fun initViewModel() {
-
+        val (month, year) = getExtras()
+        setTitle(month, year)
+        viewModel.getDiaryByDate(DateTimeConverter.stringToMonth(month), year)
     }
 
-    private fun setTitle() {
-        intent.extras?.get("month")?.let {month ->
-            intent.extras?.get("year")?.let {year ->
-                title = "$month / $year"
-            }
-        }
+    private fun getExtras(): Pair<String, Int> {
+        val month = intent.getStringExtra("month")
+        val year = intent.getIntExtra("year", -1)
+        if (month == null || year == -1)
+            finish()
+        return Pair(month, year)
     }
 
-
+    private fun setTitle(month: String, year: Int) {
+        title = "$month / $year"
+    }
 
     private fun initActionBar() {
         setSupportActionBar(toolbar)
