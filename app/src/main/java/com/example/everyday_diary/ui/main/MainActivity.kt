@@ -33,6 +33,7 @@ import kotlin.collections.ArrayList
 import kotlin.math.abs
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.network.response.MonthCount
+import com.example.everyday_diary.ui.write_activity.WriteDiaryActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_main
@@ -80,6 +81,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     override fun initViewModel() {
         viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
+    }
+
+    fun startWriteActivity() {
+        startActivity(Intent(this, WriteDiaryActivity::class.java))
     }
 
     private fun initActionBar() {

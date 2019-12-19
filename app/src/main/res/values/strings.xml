@@ -12,4 +12,7 @@
     <string name="string_welcome">Welcome</string>
     <string name="string_hint_email">Email address</string>
     <string name="string_hint_password">Password</string>
+    <string name="test">TEST</string>
+    <string name="ok">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>
