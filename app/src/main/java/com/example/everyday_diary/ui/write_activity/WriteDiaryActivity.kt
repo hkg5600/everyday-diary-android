@@ -18,6 +18,7 @@ import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
 import com.example.everyday_diary.databinding.CustomDialogBinding
+import com.example.everyday_diary.databinding.LoadingDialogBinding
 import com.example.everyday_diary.utils.FileManager
 import kotlinx.android.synthetic.main.app_bar.*
 import okhttp3.MediaType
@@ -31,13 +32,20 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     override val layoutResourceId = R.layout.activity_write_diary
     override val viewModel: WriteDiaryActivityViewModel by viewModel()
     private val imageAdapter: GalleryImageAdapter by inject()
-    lateinit var dialog: Dialog
+    lateinit var loadingDialog: Dialog
+    lateinit var loadingDialogBinding: LoadingDialogBinding
+    private lateinit var dialog: Dialog
     lateinit var customDialogBinding: CustomDialogBinding
     private var isOpen = false
     private val diaryWriteImageAdapter: DiaryWriteImageAdapter by inject()
+    private var titleFocus = false
+    private var textFocus = false
+
     override fun initView() {
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         initActionBar()
         initDialog("Do you want to exit?")
+        initLoading()
         initRecyclerView()
         initViewPager()
         setDateData()
@@ -61,9 +69,25 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         diaryWriteImageAdapter.showGalleryImage.observe(this, Observer {
             showImageList()
         })
+
+        viewModel.message.observe(this, Observer {
+            makeToast(it, false)
+            when (it) {
+                "success" -> {
+                    loadingDialog.dismiss()
+                    finish()
+                }
+            }
+        })
+
+        viewModel.networkError.observe(this, Observer {
+            loadingDialog.dismiss()
+            finish()
+        })
     }
 
     override fun initListener() {
+
         viewDataBinding.editTextTitle.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -84,6 +108,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     override fun initViewModel() {
         imageAdapter.setImage(viewModel.getImageFromGallery(this))
     }
+
 
     private fun setDateData() {
         val month = intent.getStringExtra("month")
@@ -117,10 +142,11 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     fun showImageList() {
-        if (imageAdapter.selectedImageList.isNotEmpty())
-            title = "${imageAdapter.selectedImageList.size} selected"
+        hideKeyboard()
+        title = if (imageAdapter.selectedImageList.isNotEmpty())
+            "${imageAdapter.selectedImageList.size} selected"
         else
-            title = "Gallery Image"
+            "Gallery Image"
         invalidateOptionsMenu()
         isOpen = true
         setHomeDrawable()
@@ -156,6 +182,16 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         }
     }
 
+    private fun initLoading() {
+        val loading = layoutInflater.inflate(R.layout.loading_dialog, null)
+        loadingDialogBinding =
+            LoadingDialogBinding.inflate(layoutInflater, loading as ViewGroup, false)
+        loadingDialog = Dialog(this)
+        loadingDialog.setContentView(loadingDialogBinding.root)
+        loadingDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        loadingDialog.setCancelable(false)
+    }
+
     private fun initDialog(dialogText: String) {
         val customDialog = layoutInflater.inflate(R.layout.custom_dialog, null)
         customDialogBinding =
@@ -185,7 +221,8 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.getItem(0)?.isEnabled = viewModel.title.get() != null && viewModel.text.get() != null
+        menu?.getItem(0)?.isEnabled =
+            viewDataBinding.editTextTitle.text.isNotEmpty() && viewDataBinding.editTextText.text.isNotEmpty()
         menu?.getItem(1)?.isEnabled = imageAdapter.selectedImageList.isNotEmpty()
         menu?.getItem(0)?.isVisible = !isOpen
         menu?.getItem(1)?.isVisible = isOpen
@@ -196,6 +233,8 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         when (item.itemId) {
             android.R.id.home -> checkBackMode(!isOpen)
             R.id.menu_save -> {
+                loadingDialog.show()
+                viewModel.loadFile(imageAdapter.selectedImageList, this)
                 viewModel.writeDiary()
             }
             R.id.menu_clear -> {

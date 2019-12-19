@@ -58,7 +58,7 @@ class WriteDiaryActivityViewModel(private val service: DiaryService) : BaseViewM
         return galleryImageUrls
     }
 
-    private fun loadFile(imageList: ArrayList<GalleryImageAdapter.Image>, context: Context) {
+    fun loadFile(imageList: ArrayList<GalleryImageAdapter.Image>, context: Context) {
         if (imageList.isNotEmpty()) {
             imageList.run {
                 this.forEach {

@@ -97,10 +97,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
 
     fun startWriteActivity() {
-        startActivity(
+        startActivityForResult(
             Intent(this@MainActivity, WriteDiaryActivity::class.java)
                 .putExtra("month", monthOfToday.toString())
-                .putExtra("year", viewDataBinding.textViewYear.text)
+                .putExtra("year", viewDataBinding.textViewYear.text), 1
         )
     }
 
@@ -170,6 +170,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         monthAdapter.setMonthList(monthData)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

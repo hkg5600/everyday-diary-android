@@ -37,7 +37,6 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
         viewDataBinding.executePendingBindings()
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         initView()
         initObserver()

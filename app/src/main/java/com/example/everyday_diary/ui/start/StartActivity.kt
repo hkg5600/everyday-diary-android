@@ -2,6 +2,7 @@ package com.example.everyday_diary.ui.start
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.everyday_diary.R
 import com.example.everyday_diary.base.BaseActivity
@@ -17,6 +18,7 @@ class StartActivity : BaseActivity<ActivityStartBinding, StartActivityViewModel>
     lateinit var transaction : FragmentTransaction
 
     override fun initView() {
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         initFragment()
     }
 

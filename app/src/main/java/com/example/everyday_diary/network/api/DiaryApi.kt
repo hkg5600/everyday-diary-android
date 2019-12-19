@@ -17,7 +17,7 @@ interface DiaryApi {
     fun getDiaryByDate(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<DiaryListResponse>>>
 
     @Multipart
-    @POST("/diary/diary/")
+    @POST("/api/diary/diary/")
     fun writeDiary(
         @Header("Authorization") token: String, @Part("title") title: RequestBody, @Part("text") text: RequestBody, @Part file: ArrayList<MultipartBody.Part>
         , @Part("owner") owner: RequestBody, @Part("month") month: RequestBody, @Part("year") year: RequestBody
