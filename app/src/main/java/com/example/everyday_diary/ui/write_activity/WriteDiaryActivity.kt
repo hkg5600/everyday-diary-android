@@ -9,6 +9,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.GridLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.everyday_diary.R
 import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.base.BaseActivity
@@ -28,6 +30,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     override fun initView() {
         initActionBar()
         initDialog("TEST")
+        initRecyclerView()
         dialog.show()
     }
 
@@ -76,7 +79,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         return super.onOptionsItemSelected(item)
     }
 
-    fun getImageFromGallery(context: Activity): ArrayList<String> {
+    private fun getImageFromGallery(context: Activity): ArrayList<String> {
         val galleryImageUrls: ArrayList<String> = ArrayList()
         val columns = arrayOf(
             MediaStore.Images.Media.DATA,
@@ -99,4 +102,11 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         return galleryImageUrls
     }
 
+    private fun initRecyclerView() {
+        viewDataBinding.recyclerView.apply {
+            layoutManager = GridLayoutManager(context, 3)
+            setHasFixedSize(true)
+            adapter = imageAdapter
+        }
+    }
 }
