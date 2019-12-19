@@ -82,7 +82,7 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
         val imgView: ImageView = binding.imageView
         fun bind(item: Image) {
             itemView.run {
-                Glide.with(context).load(item.uri).override(600, 600).into(image_view)
+                Glide.with(context).load(item.uri).placeholder(R.drawable.image_default).override(600, 600).into(image_view)
             }
             binding.item = item
         }

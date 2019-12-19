@@ -4,38 +4,57 @@ import android.app.Activity
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.GridLayout
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.AnimationUtils
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.everyday_diary.R
 import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
 import com.example.everyday_diary.databinding.CustomDialogBinding
+import com.example.everyday_diary.utils.FileManager
 import kotlinx.android.synthetic.main.app_bar.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 
 class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_write_diary
     override val viewModel: WriteDiaryActivityViewModel by viewModel()
-    private val imageAdapter : GalleryImageAdapter by inject()
+    private val imageAdapter: GalleryImageAdapter by inject()
     lateinit var dialog: Dialog
     lateinit var customDialogBinding: CustomDialogBinding
+    private var isOpen = false
 
     override fun initView() {
         initActionBar()
-        initDialog("TEST")
+        initDialog("Do you want to exit?")
         initRecyclerView()
-        dialog.show()
+        viewDataBinding.activity = this
     }
 
     override fun initObserver() {
+        imageAdapter.overSize.observe(this, Observer {
+            makeToast("You can select up to 13", false)
+        })
 
+        imageAdapter.onChanged.observe(this, Observer {
+            title = if (imageAdapter.selectedImageList.isEmpty())
+                "Gallery Image"
+            else
+                "${imageAdapter.selectedImageList.size} selected"
+        })
     }
 
     override fun initListener() {
@@ -43,26 +62,65 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     override fun initViewModel() {
-        imageAdapter.setImage(getImageFromGallery(this))
+        imageAdapter.setImage(viewModel.getImageFromGallery(this))
+    }
+
+    fun showOnImageList() {
+        title = "Gallery Image"
+        invalidateOptionsMenu()
+        isOpen = true
+        setHomeDrawable()
+        viewDataBinding.galleryImageHolder.run {
+            visibility = View.VISIBLE
+            startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show_on))
+        }
+    }
+
+    private fun showOffImageList() {
+        title = ""
+        invalidateOptionsMenu()
+        isOpen = false
+        setHomeDrawable()
+        viewDataBinding.galleryImageHolder.run {
+            val animation = AnimationUtils.loadAnimation(context, R.anim.gallery_image_show_off)
+            animation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {}
+                override fun onAnimationEnd(animation: Animation?) {
+                    viewDataBinding.galleryImageHolder.visibility = View.GONE
+                }
+
+                override fun onAnimationStart(animation: Animation?) {}
+            })
+            startAnimation(animation)
+        }
     }
 
     private fun initDialog(dialogText: String) {
         val customDialog = layoutInflater.inflate(R.layout.custom_dialog, null)
-        customDialogBinding = CustomDialogBinding.inflate(layoutInflater, customDialog as ViewGroup, false)
+        customDialogBinding =
+            CustomDialogBinding.inflate(layoutInflater, customDialog as ViewGroup, false)
         dialog = Dialog(this)
         dialog.setContentView(customDialogBinding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         customDialogBinding.textView.text = dialogText
+        customDialogBinding.textOk.setOnClickListener {
+            finish()
+        }
+        customDialogBinding.textCancel.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     private fun initActionBar() {
         title = ""
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+        setHomeDrawable()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (isOpen)
+            return false
         menuInflater.inflate(R.menu.menu_write_diary, menu)
         return true
     }
@@ -70,7 +128,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                checkBackMode(!isOpen)
             }
             R.id.menu_save -> {
 
@@ -79,34 +137,45 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getImageFromGallery(context: Activity): ArrayList<String> {
-        val galleryImageUrls: ArrayList<String> = ArrayList()
-        val columns = arrayOf(
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media._ID
-        )//get all columns of type images
-        val orderBy = MediaStore.Images.Media.DATE_TAKEN//order data by date
+    private fun checkBackMode(isExit: Boolean) = if (isExit) dialog.show() else showOffImageList()
 
-        val imageCursor = context.managedQuery(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns,
-            null, null, "$orderBy DESC"
-        )
-
-        for (i in 0 until imageCursor.count) {
-            imageCursor.moveToPosition(i)
-            val dataColumnIndex =
-                imageCursor.getColumnIndex(MediaStore.Images.Media.DATA)//get column index
-            galleryImageUrls.add(imageCursor.getString(dataColumnIndex))//get Image from column index
-
-        }
-        return galleryImageUrls
-    }
 
     private fun initRecyclerView() {
         viewDataBinding.recyclerView.apply {
             layoutManager = GridLayoutManager(context, 3)
             setHasFixedSize(true)
             adapter = imageAdapter
+        }
+    }
+
+    private fun setHomeDrawable() {
+        if (isOpen) {
+            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
+        } else {
+            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+        }
+    }
+
+    override fun onBackPressed() {
+        checkBackMode(!isOpen)
+    }
+
+    private fun loadFile() {
+        if (imageAdapter.selectedImageList.isNotEmpty()) {
+            imageAdapter.selectedImageList.run {
+                this.forEach {
+                    val file = File(FileManager.getRealPathFromURI(Uri.parse(it.uri), applicationContext)!!)
+                    if (file.exists()) {
+                        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                        val multipartData = MultipartBody.Part.createFormData(
+                            "image_${this.indexOf(it)}",
+                            "file.jpg",
+                            requestFile
+                        )
+                        viewModel.file.add(multipartData)
+                    }
+                }
+            }
         }
     }
 }
