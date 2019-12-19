@@ -20,6 +20,7 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
     var selectedItem = SparseBooleanArray(0)
     var selectedImageList = ArrayList<Image>()
     var isFull = false
+    var isClosing = false
 
     data class Image(val uri: String)
 
@@ -40,6 +41,8 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
 
         holder.imgView.setOnClickListener {
+            if (isClosing)
+                return@setOnClickListener
             if (selectedImageList.size >= 13)
                 isFull = true
             if (selectedItem.get(position, false)) {
@@ -98,6 +101,7 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
 
     fun clearValue() {
         selectedImageList.clear()
+        isFull = false
         var position: Int
         for (index: Int in 0 until selectedItem.size()) {
             position = selectedItem.keyAt(index)

@@ -2,12 +2,15 @@ package com.example.everyday_diary.ui.write_activity
 
 import android.app.Activity
 import android.provider.MediaStore
+import androidx.databinding.ObservableField
 import com.example.everyday_diary.base.BaseViewModel
 import okhttp3.MultipartBody
 
 class WriteDiaryActivityViewModel : BaseViewModel() {
 
     var file = ArrayList<MultipartBody.Part>()
+    var title = ObservableField<String>()
+    var text =  ObservableField<String>()
 
     fun getImageFromGallery(context: Activity): ArrayList<String> {
         val galleryImageUrls: ArrayList<String> = ArrayList()

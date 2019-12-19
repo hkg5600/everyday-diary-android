@@ -1,17 +1,13 @@
 package com.example.everyday_diary.ui.write_activity
 
-import android.app.Activity
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.provider.MediaStore
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.*
 import android.view.animation.Animation
-import android.view.animation.AnimationSet
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -42,6 +38,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         initDialog("Do you want to exit?")
         initRecyclerView()
         viewDataBinding.activity = this
+        viewDataBinding.vm = viewModel
     }
 
     override fun initObserver() {
@@ -54,11 +51,26 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
                 "Gallery Image"
             else
                 "${imageAdapter.selectedImageList.size} selected"
+            invalidateOptionsMenu()
         })
     }
 
     override fun initListener() {
+        viewDataBinding.editTextTitle.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                invalidateOptionsMenu()
+            }
+        })
 
+        viewDataBinding.editTextText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                invalidateOptionsMenu()
+            }
+        })
     }
 
     override fun initViewModel() {
@@ -74,19 +86,26 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
             visibility = View.VISIBLE
             startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show_on))
         }
+        viewDataBinding.fabClose.run {
+            visibility = View.VISIBLE
+            startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show_on))
+        }
     }
 
-    private fun showOffImageList() {
+    fun showOffImageList() {
+        imageAdapter.isClosing = true
         title = ""
         invalidateOptionsMenu()
         isOpen = false
         setHomeDrawable()
+        viewDataBinding.fabClose.visibility = View.GONE
         viewDataBinding.galleryImageHolder.run {
             val animation = AnimationUtils.loadAnimation(context, R.anim.gallery_image_show_off)
             animation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(animation: Animation?) {}
                 override fun onAnimationEnd(animation: Animation?) {
                     viewDataBinding.galleryImageHolder.visibility = View.GONE
+                    imageAdapter.isClosing = false
                 }
 
                 override fun onAnimationStart(animation: Animation?) {}
@@ -119,19 +138,28 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (isOpen)
-            return false
         menuInflater.inflate(R.menu.menu_write_diary, menu)
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.getItem(0)?.isEnabled = viewModel.title.get() != null && viewModel.text.get() != null
+        menu?.getItem(1)?.isEnabled = imageAdapter.selectedImageList.isNotEmpty()
+        menu?.getItem(0)?.isVisible = !isOpen
+        menu?.getItem(1)?.isVisible = isOpen
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> {
-                checkBackMode(!isOpen)
-            }
+            android.R.id.home -> checkBackMode(!isOpen)
             R.id.menu_save -> {
 
+            }
+            R.id.menu_clear -> {
+                imageAdapter.clearValue()
+                invalidateOptionsMenu()
+                title = "Gallery Image"
             }
         }
         return super.onOptionsItemSelected(item)
@@ -164,9 +192,15 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         if (imageAdapter.selectedImageList.isNotEmpty()) {
             imageAdapter.selectedImageList.run {
                 this.forEach {
-                    val file = File(FileManager.getRealPathFromURI(Uri.parse(it.uri), applicationContext)!!)
+                    val file = File(
+                        FileManager.getRealPathFromURI(
+                            Uri.parse(it.uri),
+                            applicationContext
+                        )!!
+                    )
                     if (file.exists()) {
-                        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                        val requestFile =
+                            RequestBody.create(MediaType.parse("multipart/form-data"), file)
                         val multipartData = MultipartBody.Part.createFormData(
                             "image_${this.indexOf(it)}",
                             "file.jpg",
