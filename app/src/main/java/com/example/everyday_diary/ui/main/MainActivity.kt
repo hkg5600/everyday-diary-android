@@ -231,8 +231,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             tedPermission()
-        } else {
-            permission = true
         }
     }
 
@@ -240,11 +238,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
         val permissionListener: PermissionListener = object : PermissionListener {
             override fun onPermissionGranted() {
-                permission = true
+
             }
 
             override fun onPermissionDenied(deniedPermissions: ArrayList<String>?) {
-                permission = false
+                finish()
             }
         }
 

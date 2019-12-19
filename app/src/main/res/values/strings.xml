@@ -3,7 +3,7 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="permissionMsg">접근 권한이 필요합니다</string>
-    <string name="permissionDenied">[[설정] -> [권한] 에서 권한을 허용할 수 있습니다]]</string>
+    <string name="permissionDenied">권한 설정 없이 이용이 불가합니다</string>
     <string name="string_sign_up">Sign Up</string>
     <string name="string_sign_in">Sign In</string>
 
