@@ -6,5 +6,5 @@ import com.example.everyday_diary.utils.TokenObject
 
 class DiaryListActivityViewModel(private val service: DiaryService) : BaseViewModel() {
 
-    fun getDiaryByMonth(id: Int) = addDisposable(service.getDiaryByDate(TokenObject.tokenData(), id), getDataObserver())
+    fun getDiaryByDate(id: Int) = addDisposable(service.getDiaryByDate(TokenObject.tokenData(), id), getDataObserver())
 }
