@@ -1,17 +1,21 @@
 package com.example.everyday_diary.utils
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
+import android.os.Build
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
 
 object DateTimeConverter {
     @SuppressLint("SimpleDateFormat")
-    fun jsonTimeToTime(jsonTime : String) : String {
+    fun jsonTimeToTime(jsonTime: String): String {
         val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         val formatter = SimpleDateFormat("yyyy/MM/dd HH:mm")
         return formatter.format(parser.parse(jsonTime)!!)
     }
 
-    fun monthToString(month: Int) = when(month) {
+    fun monthToString(month: Int) = when (month) {
         1 -> "Jan"
         2 -> "Feb"
         3 -> "Mar"
@@ -27,7 +31,7 @@ object DateTimeConverter {
         else -> "Jan"
     }
 
-    fun stringToMonth(month: String) = when(month) {
+    fun stringToMonth(month: String) = when (month) {
         "Jan" -> 1
         "Feb" -> 2
         "Mar" -> 3
@@ -43,5 +47,26 @@ object DateTimeConverter {
         else -> 1
     }
 
+    @SuppressLint("SimpleDateFormat")
+    fun DateTimeToDay(stringDate: String): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getDayFromLocalDate(LocalDate.parse(stringDate))
+        } else {
+            getDayFromDate(SimpleDateFormat("yyy-MM-dd").parse(stringDate))
+        }
+    }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    private fun getDayFromLocalDate(date: LocalDate) = date.dayOfMonth.toString()
+
+    private fun getDayFromDate(date: Date) = date.day.toString()
+
+    @TargetApi(Build.VERSION_CODES.O)
+    fun getWeekOfDateFromLocalDate(date: LocalDate) = date.dayOfWeek
+
+    fun getWeeokOfDateFromDate(date: Date): String {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        return calendar.get(Calendar.DAY_OF_WEEK).toString()
+    }
 }

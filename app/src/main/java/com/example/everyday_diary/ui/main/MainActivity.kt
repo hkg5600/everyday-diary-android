@@ -6,11 +6,9 @@ import android.annotation.TargetApi
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -35,7 +33,6 @@ import kotlin.collections.ArrayList
 import kotlin.math.abs
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.network.response.MonthCount
-import kotlinx.android.synthetic.main.app_bar.view.*
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_main
@@ -49,7 +46,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         initNavigation()
         initViewPager()
         initMonthView()
-        initDateTime()
+        setViewPagerPos()
     }
 
     override fun initObserver() {
@@ -91,25 +88,25 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         setSupportActionBar(toolbar)
     }
 
-    private fun initDateTime() {
+    private fun setViewPagerPos() {
         val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            doOnCaseUnderMin()
+            getMonthWIthUpApi()
         } else {
-            doOnCaseUpMin()
+            getMonthWIthUnderApi()
         }
         viewDataBinding.viewPager.setCurrentItem(today - 1, true)
     }
 
     @SuppressLint("SetTextI18n")
     @TargetApi(Build.VERSION_CODES.O)
-    private fun doOnCaseUnderMin(): Int {
+    private fun getMonthWIthUpApi(): Int {
         viewDataBinding.textViewDate.text =
             "${DateTimeConverter.monthToString(LocalDate.now().month.value)}, ${LocalDate.now().dayOfMonth}/${LocalDateTime.now().year}"
         return LocalDate.now().month.value
     }
 
     @SuppressLint("SetTextI18n")
-    private fun doOnCaseUpMin(): Int {
+    private fun getMonthWIthUnderApi(): Int {
         viewDataBinding.textViewDate.text =
             "${DateTimeConverter.monthToString(Calendar.getInstance().time.month)}, ${Calendar.getInstance().time.day}/${Calendar.getInstance().time.year}"
         return Calendar.getInstance().time.month
