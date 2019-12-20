@@ -54,14 +54,21 @@ class DiaryListAdapter : RecyclerView.Adapter<DiaryListAdapter.DiaryListHolder>(
 
     override fun onBindViewHolder(holder: DiaryListHolder, position: Int) {
 
+        if (onItemClickListener != null) {
+            holder.holderLayout.setOnClickListener { v ->
+                onItemClickListener?.onClick(v, position, holder)
+            }
+        }
+
         holder.bind(diaryList[position])
     }
 
     inner class DiaryListHolder(private val binding: DiaryListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        val imageHolder: ConstraintLayout = binding.imageHolder
-        val textHolder: ConstraintLayout = binding.diaryTextHolder
+        private val imageHolder: ConstraintLayout = binding.imageHolder
+        private val textHolder: ConstraintLayout = binding.diaryTextHolder
+        val holderLayout: ConstraintLayout = binding.holderLayout
 
         fun bind(item: Diary) {
             itemView.run {

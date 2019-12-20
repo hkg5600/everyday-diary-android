@@ -194,7 +194,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         viewDataBinding.viewPager.apply {
             adapter = diaryWriteImageAdapter
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            viewDataBinding.wormDotsIndicator.setViewPager2(viewDataBinding.viewPager)
+            viewDataBinding.wormDotsIndicator.setViewPager2(this)
         }
     }
 

@@ -52,7 +52,7 @@ object DateTimeConverter {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getDayFromLocalDate(LocalDate.parse(stringDate))
         } else {
-            getDayFromDate(SimpleDateFormat("yyy-MM-dd").parse(stringDate))
+            getDayFromDate(SimpleDateFormat("yyy-MM-dd").parse(stringDate)!!)
         }
     }
 
@@ -66,7 +66,7 @@ object DateTimeConverter {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getWeekOfDateFromLocalDate(LocalDate.parse(stringDate)).substring(0, 3)
         } else {
-            getWeekOfDateFromDate(SimpleDateFormat("yyy-MM-dd").parse(stringDate)).substring(0, 3)
+            getWeekOfDateFromDate(SimpleDateFormat("yyy-MM-dd").parse(stringDate)!!).substring(0, 3)
         }
     }
 

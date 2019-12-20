@@ -1,12 +1,16 @@
 package com.example.everyday_diary.ui.diary_list
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.R
 import com.example.everyday_diary.adapter.DiaryListAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityDiaryListBinding
 import com.example.everyday_diary.network.response.DiaryListResponse
+import com.example.everyday_diary.ui.diary_detail.DiaryDetailActivity
 import com.example.everyday_diary.utils.DateTimeConverter
 import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.android.ext.android.inject
@@ -35,7 +39,21 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
     }
 
     override fun initListener() {
-
+        diaryListAdapter.onItemClickListener = object : DiaryListAdapter.OnItemClickListener {
+            override fun onClick(
+                view: View,
+                position: Int,
+                holder: DiaryListAdapter.DiaryListHolder
+            ) {
+                startActivity(
+                    Intent(
+                        this@DiaryListActivity,
+                        DiaryDetailActivity::class.java
+                    ).putExtra("id", diaryListAdapter.diaryList[position].id),
+                    ActivityOptions.makeSceneTransitionAnimation(this@DiaryListActivity).toBundle()
+                )
+            }
+        }
     }
 
     override fun initViewModel() {

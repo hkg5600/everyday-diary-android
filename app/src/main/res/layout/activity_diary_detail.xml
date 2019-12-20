@@ -17,7 +17,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="55dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/image_holder"
@@ -25,7 +26,8 @@
                 android:layout_height="260dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/scroll_view">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/view_pager"
@@ -34,14 +36,15 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="#7f7f7f"/>
 
                 <com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator
                     android:id="@+id/worm_dots_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:dotsColor="@color/colorPrimary"
                     app:dotsCornerRadius="8dp"
                     app:dotsSize="10dp"
@@ -78,8 +81,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:singleLine="true"
                         tools:text="Aug 23/2019"
-                        android:layout_marginTop="30dp"
-                        android:padding="5dp"/>
+                        android:layout_marginTop="30dp" />
 
                     <TextView
                         android:id="@+id/text_view_title"
@@ -93,8 +95,7 @@
                         android:textSize="24sp"
                         android:textColor="#312f36"
                         tools:text="This is title"
-                        android:gravity="center"
-                        android:padding="5dp"/>
+                        android:gravity="center" />
 
                     <TextView
                         android:id="@+id/text_view_text"
@@ -108,7 +109,6 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
-                        android:padding="5dp"
                         android:textSize="14sp"
                         android:textColor="#312f36"
                         tools:text="This is description"/>
