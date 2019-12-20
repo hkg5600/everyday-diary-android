@@ -1,9 +1,6 @@
 package com.example.everyday_diary.network.api
 
-import com.example.everyday_diary.network.response.DiaryDetailReponse
-import com.example.everyday_diary.network.response.DiaryListResponse
-import com.example.everyday_diary.network.response.MonthCount
-import com.example.everyday_diary.network.response.Response
+import com.example.everyday_diary.network.response.*
 import io.reactivex.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -26,4 +23,7 @@ interface DiaryApi {
 
     @GET
     fun getDiaryDetail(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<DiaryDetailReponse>>>
+
+    @GET
+    fun getCardImage(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<CardImageResponse>>>
 }

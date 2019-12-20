@@ -23,4 +23,7 @@ class MainActivityViewModel(
         UserObject.user = null
         deleteTokenFromRoom()
     }
+
+    fun getCardImage(year: Int) =
+        addDisposable(diaryService.getCardImage(TokenObject.tokenData(), year), getDataObserver())
 }

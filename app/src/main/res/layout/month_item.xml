@@ -4,6 +4,7 @@
     xmlns:tool="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="item"
             type="com.example.everyday_diary.adapter.MonthAdapter.Month" />
@@ -12,72 +13,95 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_marginStart="@dimen/pageMarginAndOffset"
-        android:layout_marginEnd="@dimen/pageMarginAndOffset">
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="@dimen/pageMarginAndOffset"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/holder_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:elevation="10dp">
+            
+            <ImageView
+                android:id="@+id/image_view_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:adjustViewBounds="true"
+                android:scaleType="center"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/text_view_month_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
-                android:textSize="38sp"
-                android:textColor="#ffffff"
+                android:layout_marginTop="10dp"
                 android:lineSpacingExtra="13sp"
                 android:text="@{Integer.toString(item.month)}"
-                tool:text="8"/>
+                android:textColor="#ffffff"
+                android:textSize="38sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tool:text="8" />
 
             <TextView
                 android:id="@+id/text_view_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_month_num"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="20dp"
-                android:textColor="#ffffff"
                 android:lineSpacingExtra="8sp"
-                android:textSize="24sp"
                 android:text="@{item.monthName}"
-                tool:text="Aug"/>
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_month_num"
+                tool:text="Aug" />
 
             <TextView
                 android:id="@+id/text_view_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@+id/progress_date"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="10dp"
-                android:textSize="12sp"
-                android:textColor="#ffffff"
                 android:lineSpacingExtra="4sp"
                 android:text="@{item.progress}"
-                tool:text="13/31"/>
+                android:textColor="#ffffff"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/progress_date"
+                app:layout_constraintStart_toStartOf="parent"
+                tool:text="13/31" />
 
             <ProgressBar
                 android:id="@+id/progress_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 style="?android:attr/progressBarStyleHorizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginBottom="30dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp" />
+                android:layout_marginBottom="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_menu"
+                app:layout_constraintStart_toStartOf="parent" />
 
+            <ImageButton
+                android:id="@+id/button_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="28dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_option"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/progress_date" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

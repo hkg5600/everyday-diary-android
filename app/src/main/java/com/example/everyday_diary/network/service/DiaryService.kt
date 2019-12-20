@@ -1,10 +1,7 @@
 package com.example.everyday_diary.network.service
 
 import com.example.everyday_diary.network.api.DiaryApi
-import com.example.everyday_diary.network.response.DiaryDetailReponse
-import com.example.everyday_diary.network.response.DiaryListResponse
-import com.example.everyday_diary.network.response.MonthCount
-import com.example.everyday_diary.network.response.Response
+import com.example.everyday_diary.network.response.*
 import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -32,9 +29,18 @@ interface DiaryService {
         token: String,
         id: Int
     ): Single<retrofit2.Response<Response<DiaryDetailReponse>>>
+
+    fun getCardImage(
+        token: String,
+        year: Int
+    ): Single<retrofit2.Response<Response<CardImageResponse>>>
 }
 
 class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
+    override fun getCardImage(
+        token: String,
+        year: Int
+    ) = api.getCardImage(token, "/api/diary/card-image/$year/")
 
     override fun getDiaryDetail(
         token: String,

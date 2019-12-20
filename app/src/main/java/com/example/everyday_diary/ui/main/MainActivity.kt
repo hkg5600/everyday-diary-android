@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
@@ -33,6 +34,7 @@ import kotlin.math.abs
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.databinding.MainBottomSheetDialogBinding
 import com.example.everyday_diary.databinding.YearPickerBinding
+import com.example.everyday_diary.network.response.CardImageResponse
 import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.UserInfoResponse
 import com.example.everyday_diary.ui.start.StartActivity
@@ -82,6 +84,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                     UserObject.user = it.user
                     viewDataBinding.buttonWrite.isEnabled = true
                 }
+
+                is CardImageResponse -> {
+                    monthAdapter.selectedItem.clear()
+                    it.card_image.map { cardImage ->
+                        monthAdapter.monthList.filter { image ->
+                            image.month == cardImage.month
+                        }.map { card ->
+                            card.image = cardImage
+                            monthAdapter.selectedItem.put(cardImage.month-1, true)
+                        }
+                    }
+                    monthAdapter.notifyDataSetChanged()
+                }
             }
         })
 
@@ -112,11 +127,33 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                 )
             }
         }
+
+        monthAdapter.onMenuClickListener = object : MonthAdapter.OnItemClickListener {
+            override fun onClick(view: View, position: Int, holder: MonthAdapter.MonthHolder) {
+                val popupMenu = PopupMenu(this@MainActivity, view)
+                menuInflater.inflate(R.menu.menu_month_card, popupMenu.menu)
+                popupMenu.apply {
+                    setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.menu_image_change -> {
+
+                            }
+                            R.id.menu_image_default -> {
+
+                            }
+                        }
+                        false
+                    }
+                    show()
+                }
+            }
+        }
     }
 
     override fun initViewModel() {
         viewModel.getUserInfo()
         viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
+        viewModel.getCardImage(viewDataBinding.textViewYear.text.toString().toInt())
     }
 
     fun startWriteActivity() {
@@ -207,18 +244,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     private fun initMonthView() {
         val monthData = ArrayList<MonthAdapter.Month>()
-        monthData.add(MonthAdapter.Month(1, "Jan", "0/31", 0, 31, "#90cbc4"))
-        monthData.add(MonthAdapter.Month(2, "Feb", "0/29", 0, 29, "#00fff4"))
-        monthData.add(MonthAdapter.Month(3, "Mar", "0/31", 0, 31, "#4343f6"))
-        monthData.add(MonthAdapter.Month(4, "Apr", "0/30", 0, 30, "#ca5ff4"))
-        monthData.add(MonthAdapter.Month(5, "May", "0/31", 0, 31, "#f887ff"))
-        monthData.add(MonthAdapter.Month(6, "Jun", "0/30", 0, 30, "#0d97a7"))
-        monthData.add(MonthAdapter.Month(7, "Jul", "0/31", 0, 31, "#92cbc5"))
-        monthData.add(MonthAdapter.Month(8, "Aug", "0/31", 0, 31, "#3f51b5"))
-        monthData.add(MonthAdapter.Month(9, "Sep", "0/30", 0, 30, "#ffb8ea"))
-        monthData.add(MonthAdapter.Month(10, "Oct", "0/31", 0, 31, "#b92d02"))
-        monthData.add(MonthAdapter.Month(11, "Nov", "0/30", 0, 30, "#dfaeff"))
-        monthData.add(MonthAdapter.Month(12, "Dec", "0/31", 0, 31, "#ff6e6e"))
+        monthData.add(MonthAdapter.Month(1, "Jan", "0/31", 0, 31, "#90cbc4", null))
+        monthData.add(MonthAdapter.Month(2, "Feb", "0/29", 0, 29, "#00fff4", null))
+        monthData.add(MonthAdapter.Month(3, "Mar", "0/31", 0, 31, "#4343f6", null))
+        monthData.add(MonthAdapter.Month(4, "Apr", "0/30", 0, 30, "#ca5ff4", null))
+        monthData.add(MonthAdapter.Month(5, "May", "0/31", 0, 31, "#f887ff", null))
+        monthData.add(MonthAdapter.Month(6, "Jun", "0/30", 0, 30, "#0d97a7", null))
+        monthData.add(MonthAdapter.Month(7, "Jul", "0/31", 0, 31, "#92cbc5", null))
+        monthData.add(MonthAdapter.Month(8, "Aug", "0/31", 0, 31, "#3f51b5", null))
+        monthData.add(MonthAdapter.Month(9, "Sep", "0/30", 0, 30, "#ffb8ea", null))
+        monthData.add(MonthAdapter.Month(10, "Oct", "0/31", 0, 31, "#b92d02", null))
+        monthData.add(MonthAdapter.Month(11, "Nov", "0/30", 0, 30, "#dfaeff", null))
+        monthData.add(MonthAdapter.Month(12, "Dec", "0/31", 0, 31, "#ff6e6e", null))
         monthAdapter.setMonthList(monthData)
     }
 
