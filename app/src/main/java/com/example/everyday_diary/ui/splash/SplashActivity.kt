@@ -80,6 +80,6 @@ class SplashActivity : AppCompatActivity() {
             finish()
         })
 
-        viewModel.getToken()
+        viewModel.getTokenFromRoom()
     }
 }

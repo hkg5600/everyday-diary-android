@@ -14,5 +14,5 @@ class SplashActivityViewModel(private val userService: UserService) : BaseViewMo
         addDisposable(userService.refreshToken(TokenRequest(token)), getDataObserver())
 
     fun insertToken(token: String, refreshToken: String) =
-        insertToken(Token(1, token, refreshToken))
+        insertTokenToRoom(Token(1, token, refreshToken))
 }

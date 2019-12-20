@@ -1,4 +1,4 @@
-package com.example.travelercommunityapp.utils
+package com.example.everyday_diary.utils
 
 import android.util.Base64
 import com.example.everyday_diary.network.model.UserInfo

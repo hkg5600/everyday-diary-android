@@ -15,7 +15,6 @@ import com.example.everyday_diary.network.response.DiaryDetailReponse
 import com.example.everyday_diary.utils.DateTimeConverter
 import kotlinx.android.synthetic.main.app_bar.*
 import kotlinx.android.synthetic.main.app_bar.toolbar
-import kotlinx.android.synthetic.main.detail_app_bar.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

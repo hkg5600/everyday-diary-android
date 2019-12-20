@@ -9,14 +9,9 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
 import com.example.everyday_diary.R
@@ -36,32 +31,38 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 import androidx.lifecycle.Observer
+import com.example.everyday_diary.databinding.MainBottomSheetDialogBinding
 import com.example.everyday_diary.databinding.YearPickerBinding
 import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.UserInfoResponse
+import com.example.everyday_diary.ui.start.StartActivity
 import com.example.everyday_diary.ui.write_activity.WriteDiaryActivity
-import com.example.travelercommunityapp.utils.UserObject
+import com.example.everyday_diary.utils.UserObject
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_main
     override val viewModel: MainActivityViewModel by viewModel()
-    private var permission: Boolean = false
     private val monthAdapter: MonthAdapter by inject()
-    var monthOfToday = 0
+    private var monthOfToday = 0
     private lateinit var dialog: Dialog
     private lateinit var yearPickerBinding: YearPickerBinding
+    private lateinit var bottomSheetBinding : MainBottomSheetDialogBinding
+    private lateinit var bottomSheetDialog : BottomSheetDialog
 
     override fun initView() {
         viewDataBinding.buttonWrite.isEnabled = false
         checkPermission()
         initActionBar()
-        initNavigation()
+        initBottomSheetBinding()
+        initBottomSheetDialog()
         initViewPager()
         initYearDialog()
         initYearPicker()
         setMonthOfToday()
         initMonthView()
         setViewPagerPos()
+        bottomSheetClick()
         viewDataBinding.textViewYear.text = Calendar.getInstance().get(Calendar.YEAR).toString()
         viewDataBinding.activity = this
     }
@@ -82,6 +83,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                     viewDataBinding.buttonWrite.isEnabled = true
                 }
             }
+        })
+
+        viewModel.roomSuccess.observe(this, Observer {
+            when (it) {
+                "logout" -> {
+                    startActivity(Intent(this, StartActivity::class.java))
+                    finish()
+                }
+            }
+        })
+
+        viewModel.roomError.observe(this, Observer {
+            makeToast("Error: Try again later", false)
         })
     }
 
@@ -145,6 +159,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         return Calendar.getInstance().time.month
     }
 
+    fun showYearPicker() {
+        dialog.show()
+    }
+
+    fun showBottomSheet() {
+        bottomSheetDialog.show()
+    }
+
+
     private fun initViewPager() {
         viewDataBinding.viewPager.apply {
             adapter = monthAdapter
@@ -164,7 +187,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     private fun initMonthView() {
         val monthData = ArrayList<MonthAdapter.Month>()
-        monthData.add(MonthAdapter.Month(1, "Jan", "0/31", 0, 31, "#b9fd75"))
+        monthData.add(MonthAdapter.Month(1, "Jan", "0/31", 0, 31, "#90cbc4"))
         monthData.add(MonthAdapter.Month(2, "Feb", "0/29", 0, 29, "#00fff4"))
         monthData.add(MonthAdapter.Month(3, "Mar", "0/31", 0, 31, "#4343f6"))
         monthData.add(MonthAdapter.Month(4, "Apr", "0/30", 0, 30, "#ca5ff4"))
@@ -175,32 +198,30 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         monthData.add(MonthAdapter.Month(9, "Sep", "0/30", 0, 30, "#ffb8ea"))
         monthData.add(MonthAdapter.Month(10, "Oct", "0/31", 0, 31, "#b92d02"))
         monthData.add(MonthAdapter.Month(11, "Nov", "0/30", 0, 30, "#dfaeff"))
-        monthData.add(MonthAdapter.Month(12, "Dec", "0/31", 0, 31, "#ff4081"))
+        monthData.add(MonthAdapter.Month(12, "Dec", "0/31", 0, 31, "#ff6e6e"))
         monthAdapter.setMonthList(monthData)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
+    private fun initBottomSheetDialog() {
+        bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialog.setContentView(bottomSheetBinding.root)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_nav -> {
-                viewDataBinding.drawerLayout.openDrawer(GravityCompat.END)
-            }
+    private fun initBottomSheetBinding() {
+        val bottomSheetInflater = layoutInflater.inflate(R.layout.main_bottom_sheet_dialog, null)
+        bottomSheetBinding = MainBottomSheetDialogBinding.inflate(layoutInflater, bottomSheetInflater as ViewGroup, false)
+    }
+
+    private fun bottomSheetClick() {
+        bottomSheetBinding.textViewLogOut.setOnClickListener {
+            viewModel.logout()
         }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() =
-        if (viewDataBinding.drawerLayout.isDrawerOpen(GravityCompat.END)) viewDataBinding.drawerLayout.closeDrawer(
-            GravityCompat.END
-        ) else super.onBackPressed()
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
+        bottomSheetBinding.textViewRecent.setOnClickListener {
+            makeToast("recent", false)
+        }
+        bottomSheetBinding.textViewSetting.setOnClickListener {
+            makeToast("setting", false)
+        }
     }
 
     private fun initYearPicker() {
@@ -226,33 +247,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         dialog = Dialog(this)
         dialog.setContentView(yearPickerBinding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-    }
-
-    fun showYearPicker() {
-        dialog.show()
-    }
-
-    private fun initNavigation() {
-        val actionBarDrawerToggle = ActionBarDrawerToggle(
-            this,
-            viewDataBinding.drawerLayout,
-            viewDataBinding.appbarLayout.toolbar,
-            R.string.drawer_open,
-            R.string.drawer_close
-        )
-        viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        viewDataBinding.drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        viewDataBinding.drawerLayout.setDrawerListener(object : DrawerLayout.DrawerListener {
-            override fun onDrawerStateChanged(newState: Int) {}
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
-            override fun onDrawerClosed(drawerView: View) {
-                viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-            }
-
-            override fun onDrawerOpened(drawerView: View) {
-                viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-            }
-        })
     }
 
     private fun checkPermission() {
@@ -287,5 +281,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             .check()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
     }
 }

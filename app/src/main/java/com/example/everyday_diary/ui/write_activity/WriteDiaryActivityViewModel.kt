@@ -10,7 +10,7 @@ import com.example.everyday_diary.base.BaseViewModel
 import com.example.everyday_diary.network.service.DiaryService
 import com.example.everyday_diary.utils.FileManager
 import com.example.everyday_diary.utils.TokenObject
-import com.example.travelercommunityapp.utils.UserObject
+import com.example.everyday_diary.utils.UserObject
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

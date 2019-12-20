@@ -4,6 +4,7 @@ import com.example.everyday_diary.base.BaseViewModel
 import com.example.everyday_diary.network.service.DiaryService
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.utils.TokenObject
+import com.example.everyday_diary.utils.UserObject
 
 class MainActivityViewModel(
     private val diaryService: DiaryService,
@@ -15,4 +16,11 @@ class MainActivityViewModel(
 
     fun getUserInfo() =
         addDisposable(userService.getUserInfo(TokenObject.tokenData()), getDataObserver())
+
+    fun logout() {
+        TokenObject.refreshToken = null
+        TokenObject.token = null
+        UserObject.user = null
+        deleteTokenFromRoom()
+    }
 }

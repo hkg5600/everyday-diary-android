@@ -1,6 +1,5 @@
 package com.example.everyday_diary.base
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.everyday_diary.room.model.Token
 import com.example.everyday_diary.utils.SingleLiveEvent
@@ -12,7 +11,6 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
@@ -112,12 +110,17 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     //Token
-    fun insertToken(token: Token) {
+    fun insertTokenToRoom(token: Token) {
         loading.value = true
         addRoomDisposable(tokenUtil?.insertToken(token)!!, "tokenData")
     }
 
-    fun getToken() {
+    fun deleteTokenFromRoom() {
+        loading.value = true
+        addRoomDisposable(tokenUtil?.deleteToken()!!, "logout")
+    }
+
+    fun getTokenFromRoom() {
         loading.value = true
         compositeDisposable.add(
             tokenUtil?.getToken()?.subscribeOn(Schedulers.io())?.observeOn(
@@ -156,7 +159,7 @@ abstract class BaseViewModel : ViewModel() {
                 when (t.body()?.status) {
                     200 -> {
                         TokenObject.token = t.body()?.data?.token
-                        insertToken(Token(1, TokenObject.token!!, TokenObject.refreshToken!!))
+                        insertTokenToRoom(Token(1, TokenObject.token!!, TokenObject.refreshToken!!))
                         tokenChanged.value = true
                     }
                     400 -> {

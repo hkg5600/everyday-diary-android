@@ -9,12 +9,6 @@
             type="com.example.everyday_diary.ui.main.MainActivity" />
     </data>
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -63,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="25dp"
-                    android:layout_marginBottom="25dp"
+                    android:layout_marginBottom="28dp"
                     android:background="@drawable/holder_date_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
@@ -93,6 +87,19 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageButton
+                    android:id="@+id/button_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="25dp"
+                    android:background="@drawable/main_button_background"
+                    android:padding="15dp"
+                    android:src="@drawable/ic_settings"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:onClick="@{() -> activity.showBottomSheet()()}" />
+
+                <ImageButton
                     android:id="@+id/button_write"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -102,18 +109,11 @@
                     android:padding="15dp"
                     android:src="@drawable/ic_edit"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_setting"
                     android:onClick="@{() -> activity.startWriteActivity()}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            app:headerLayout="@layout/nav_header"/>
-    </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

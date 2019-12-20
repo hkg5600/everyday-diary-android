@@ -1,8 +1,6 @@
 package com.example.everyday_diary.ui.login
 
 import android.content.Intent
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.R
 import com.example.everyday_diary.base.BaseFragment
@@ -46,7 +44,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginFragmentViewModel>
                         token = it.token
                         refreshToken = it.refreshToken
                     }
-                    viewModel.insertToken(Token(1, it.token, it.refreshToken))
+                    viewModel.insertTokenToRoom(Token(1, it.token, it.refreshToken))
                 }
             }
         })
