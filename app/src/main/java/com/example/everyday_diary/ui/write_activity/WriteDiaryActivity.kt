@@ -3,9 +3,6 @@ package com.example.everyday_diary.ui.write_activity
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -18,16 +15,10 @@ import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
 import com.example.everyday_diary.databinding.CustomDialogBinding
-import com.example.everyday_diary.databinding.LoadingDialogBinding
 import com.example.everyday_diary.utils.CustomTextWatcher
-import com.example.everyday_diary.utils.FileManager
 import kotlinx.android.synthetic.main.app_bar.*
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
 
 class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_write_diary
@@ -171,47 +162,33 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         }
     }
 
-
-    private fun initDialog(dialogText: String) {
-        val customDialog = layoutInflater.inflate(R.layout.custom_dialog, null)
-        customDialogBinding =
-            CustomDialogBinding.inflate(layoutInflater, customDialog as ViewGroup, false)
-        dialog = Dialog(this)
-        dialog.setContentView(customDialogBinding.root)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        customDialogBinding.textView.text = dialogText
-        customDialogBinding.textOk.setOnClickListener {
-            finish()
-        }
-        customDialogBinding.textCancel.setOnClickListener {
-            dialog.dismiss()
-        }
-    }
-
-    private fun initActionBar() {
-        title = ""
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setHomeDrawable()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_write_diary, menu)
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.getItem(0)?.isEnabled =
-            viewDataBinding.editTextTitle.text.isNotEmpty() && viewDataBinding.editTextText.text.isNotEmpty()
-        menu?.getItem(1)?.isEnabled = imageAdapter.selectedImageList.isNotEmpty()
-        menu?.getItem(0)?.isVisible = !isOpen
-        menu?.getItem(1)?.isVisible = isOpen
+        menu?.let {
+            setMenuItemEnable(it)
+            setMenuItemVisible(it)
+        }
         return super.onPrepareOptionsMenu(menu)
+    }
+
+    private fun setMenuItemEnable(menu: Menu) {
+        menu.getItem(0)?.isEnabled =
+            viewDataBinding.editTextTitle.text.isNotEmpty() && viewDataBinding.editTextText.text.isNotEmpty()
+        menu.getItem(1)?.isEnabled = imageAdapter.selectedImageList.isNotEmpty()
+    }
+
+    private fun setMenuItemVisible(menu: Menu) {
+        menu.getItem(0)?.isVisible = !isOpen
+        menu.getItem(1)?.isVisible = isOpen
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> checkBackMode(!isOpen)
+            android.R.id.home -> doOnBackPressed(!isOpen)
             R.id.menu_save -> {
                 loadingDialog.show()
                 viewModel.loadFile(imageAdapter.selectedImageList, this)
@@ -226,16 +203,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         return super.onOptionsItemSelected(item)
     }
 
-    private fun checkBackMode(isExit: Boolean) = if (isExit) dialog.show() else hideImageList()
-
-
-    private fun initRecyclerView() {
-        viewDataBinding.recyclerView.apply {
-            layoutManager = GridLayoutManager(context, 3)
-            setHasFixedSize(true)
-            adapter = imageAdapter
-        }
-    }
+    private fun doOnBackPressed(isExit: Boolean) = if (isExit) dialog.show() else hideImageList()
 
     private fun setHomeDrawable() {
         if (isOpen) {
@@ -246,7 +214,23 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     override fun onBackPressed() {
-        checkBackMode(!isOpen)
+        doOnBackPressed(!isOpen)
+    }
+
+
+    private fun initActionBar() {
+        title = ""
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setHomeDrawable()
+    }
+
+    private fun initRecyclerView() {
+        viewDataBinding.recyclerView.apply {
+            layoutManager = GridLayoutManager(context, 3)
+            setHasFixedSize(true)
+            adapter = imageAdapter
+        }
     }
 
     private fun initViewPager() {
@@ -254,6 +238,23 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
             adapter = diaryWriteImageAdapter
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             viewDataBinding.wormDotsIndicator.setViewPager2(viewDataBinding.viewPager)
+        }
+    }
+
+
+    private fun initDialog(dialogMsg: String) {
+        val customDialog = layoutInflater.inflate(R.layout.custom_dialog, null)
+        customDialogBinding =
+            CustomDialogBinding.inflate(layoutInflater, customDialog as ViewGroup, false)
+        dialog = Dialog(this)
+        dialog.setContentView(customDialogBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        customDialogBinding.textView.text = dialogMsg
+        customDialogBinding.textOk.setOnClickListener {
+            finish()
+        }
+        customDialogBinding.textCancel.setOnClickListener {
+            dialog.dismiss()
         }
     }
 }
