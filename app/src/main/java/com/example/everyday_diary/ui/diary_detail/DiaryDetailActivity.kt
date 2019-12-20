@@ -1,10 +1,16 @@
 package com.example.everyday_diary.ui.diary_detail
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.Window
+import androidx.viewpager2.widget.ViewPager2
 import com.example.everyday_diary.R
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityDiaryDetailBinding
+import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DiaryDetailActivity :
@@ -15,7 +21,7 @@ class DiaryDetailActivity :
 
 
     override fun initView() {
-
+        initActionBar()
     }
 
     override fun initObserver() {
@@ -30,5 +36,27 @@ class DiaryDetailActivity :
 
     }
 
+    private fun initViewPater() {
+        viewDataBinding.viewPager.apply {
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            viewDataBinding.wormDotsIndicator.setViewPager2(viewDataBinding.viewPager)
+        }
+    }
+
+    private fun initActionBar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            android.R.id.home -> finishAfterTransition()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 }
