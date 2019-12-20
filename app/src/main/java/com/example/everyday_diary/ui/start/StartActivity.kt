@@ -1,7 +1,5 @@
 package com.example.everyday_diary.ui.start
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.WindowManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.everyday_diary.R
@@ -15,7 +13,7 @@ class StartActivity : BaseActivity<ActivityStartBinding, StartActivityViewModel>
     override val layoutResourceId = R.layout.activity_start
     override val viewModel: StartActivityViewModel by viewModel()
     private val loginFragment: LoginFragment by inject()
-    lateinit var transaction : FragmentTransaction
+    lateinit var transaction: FragmentTransaction
 
     override fun initView() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
