@@ -39,7 +39,7 @@ class DiaryDetailImageAdapter : RecyclerView.Adapter<DiaryDetailImageAdapter.Dia
         RecyclerView.ViewHolder(binding.root) {
 
         val imageVIew: ImageView = binding.imageView
-        
+
         fun bind(item: Image) {
             binding.item = item
             itemView.run {
