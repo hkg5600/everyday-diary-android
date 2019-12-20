@@ -15,4 +15,5 @@
     <string name="test">TEST</string>
     <string name="ok">Yes</string>
     <string name="cancel">Cancel</string>
+    <string name="string_set">Set</string>
 </resources>

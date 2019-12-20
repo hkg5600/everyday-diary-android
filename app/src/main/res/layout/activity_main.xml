@@ -42,7 +42,10 @@
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="@{() -> activity.showYearPicker()}"/>
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/view_pager"

@@ -3,12 +3,16 @@ package com.example.everyday_diary.ui.main
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -32,11 +36,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 import androidx.lifecycle.Observer
+import com.example.everyday_diary.databinding.YearPickerBinding
 import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.UserInfoResponse
 import com.example.everyday_diary.ui.write_activity.WriteDiaryActivity
 import com.example.travelercommunityapp.utils.UserObject
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_main
@@ -44,6 +48,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     private var permission: Boolean = false
     private val monthAdapter: MonthAdapter by inject()
     var monthOfToday = 0
+    private lateinit var dialog: Dialog
+    private lateinit var yearPickerBinding: YearPickerBinding
 
     override fun initView() {
         viewDataBinding.buttonWrite.isEnabled = false
@@ -51,9 +57,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         initActionBar()
         initNavigation()
         initViewPager()
+        initYearDialog()
+        initYearPicker()
         setMonthOfToday()
         initMonthView()
         setViewPagerPos()
+        viewDataBinding.textViewYear.text = Calendar.getInstance().get(Calendar.YEAR).toString()
         viewDataBinding.activity = this
     }
 
@@ -192,6 +201,35 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    private fun initYearPicker() {
+        yearPickerBinding.yearPicker.apply {
+            minValue = 1980
+            maxValue = Calendar.getInstance().get(Calendar.YEAR)
+            value = Calendar.getInstance().get(Calendar.YEAR)
+        }
+        yearPickerBinding.textOk.setOnClickListener {
+            viewDataBinding.textViewYear.text = yearPickerBinding.yearPicker.value.toString()
+            viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
+            dialog.dismiss()
+        }
+        yearPickerBinding.textCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+    }
+
+    private fun initYearDialog() {
+        val customDialog = layoutInflater.inflate(R.layout.year_picker, null)
+        yearPickerBinding =
+            YearPickerBinding.inflate(layoutInflater, customDialog as ViewGroup, false)
+        dialog = Dialog(this)
+        dialog.setContentView(yearPickerBinding.root)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+    fun showYearPicker() {
+        dialog.show()
     }
 
     private fun initNavigation() {
