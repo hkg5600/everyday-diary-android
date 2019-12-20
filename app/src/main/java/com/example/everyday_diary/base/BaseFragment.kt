@@ -38,10 +38,32 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
 
     lateinit var loadingDialogBinding: LoadingDialogBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
+        initBinding(inflater, container)
+        initLoading()
+        initView()
+        initObserver()
+        initListener()
+        initViewModel()
+        initBaseObserver()
+        return viewDataBinding.root
+    }
+
+    private fun initBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) {
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutResourceId, container, false)
         viewDataBinding.executePendingBindings()
+    }
+
+
+    private fun initBaseObserver() {
         viewModel.networkError.observe(viewLifecycleOwner, Observer {
             makeToast("check your network connection", false)
             activity?.recreate()
@@ -63,27 +85,20 @@ abstract class BaseFragment<T : ViewDataBinding, V : BaseViewModel> : Fragment()
             else
                 loadingDialog.dismiss()
         })
-
-        //BaseFragment
-        initLoading()
-        initView()
-        initObserver()
-        initListener()
-        initViewModel()
-
-        return viewDataBinding.root
     }
 
     private fun initLoading() {
-        val loading = layoutInflater.inflate(com.example.everyday_diary.R.layout.loading_dialog, null)
-        loadingDialogBinding = LoadingDialogBinding.inflate(layoutInflater, loading as ViewGroup, false)
+        val loading =
+            layoutInflater.inflate(com.example.everyday_diary.R.layout.loading_dialog, null)
+        loadingDialogBinding =
+            LoadingDialogBinding.inflate(layoutInflater, loading as ViewGroup, false)
         loadingDialog = Dialog(context!!)
         loadingDialog.setContentView(loadingDialogBinding.root)
         loadingDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         loadingDialog.setCancelable(false)
     }
 
-    fun makeToast(msg: String, isLong : Boolean) {
+    fun makeToast(msg: String, isLong: Boolean) {
         if (isLong)
             Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
         else
