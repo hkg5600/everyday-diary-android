@@ -1,6 +1,7 @@
 package com.example.everyday_diary.network.service
 
 import com.example.everyday_diary.network.api.DiaryApi
+import com.example.everyday_diary.network.response.DiaryDetailReponse
 import com.example.everyday_diary.network.response.DiaryListResponse
 import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.Response
@@ -26,9 +27,20 @@ interface DiaryService {
         month: String,
         year: String
     ): Single<retrofit2.Response<Response<Any>>>
+
+    fun getDiaryDetail(
+        token: String,
+        id: Int
+    ): Single<retrofit2.Response<Response<DiaryDetailReponse>>>
 }
 
 class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
+    
+    override fun getDiaryDetail(
+        token: String,
+        id: Int
+    ) = api.getDiaryDetail(token, "/api/diary/diary/$id/")
+
     override fun writeDiary(
         token: String,
         title: String,
