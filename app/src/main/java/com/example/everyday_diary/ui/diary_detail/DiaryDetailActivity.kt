@@ -8,9 +8,11 @@ import android.view.MenuItem
 import android.view.Window
 import androidx.viewpager2.widget.ViewPager2
 import com.example.everyday_diary.R
+import com.example.everyday_diary.adapter.DiaryWriteImageAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityDiaryDetailBinding
 import kotlinx.android.synthetic.main.app_bar.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DiaryDetailActivity :
@@ -18,7 +20,7 @@ class DiaryDetailActivity :
 
     override val layoutResourceId = R.layout.activity_diary_detail
     override val viewModel: DiaryDetailActivityViewModel by viewModel()
-
+    
 
     override fun initView() {
         initActionBar()
