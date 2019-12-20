@@ -1,5 +1,6 @@
 package com.example.everyday_diary.network.api
 
+import com.example.everyday_diary.network.response.DiaryDetailReponse
 import com.example.everyday_diary.network.response.DiaryListResponse
 import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.Response
@@ -22,4 +23,7 @@ interface DiaryApi {
         @Header("Authorization") token: String, @Part("title") title: RequestBody, @Part("text") text: RequestBody, @Part file: ArrayList<MultipartBody.Part>
         , @Part("owner") owner: RequestBody, @Part("month") month: RequestBody, @Part("year") year: RequestBody
     ): Single<retrofit2.Response<Response<Any>>>
+
+    @GET
+    fun getDiaryDetail(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<DiaryDetailReponse>>>
 }
