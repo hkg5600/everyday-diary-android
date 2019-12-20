@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.*
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,6 +14,7 @@ import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
 import com.example.everyday_diary.databinding.CustomDialogBinding
+import com.example.everyday_diary.utils.CustomAnimationListener
 import com.example.everyday_diary.utils.CustomTextWatcher
 import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.android.ext.android.inject
@@ -35,7 +35,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         initDialog("Do you want to exit?")
         initRecyclerView()
         initViewPager()
-        setDateData()
+        setDate()
         viewDataBinding.activity = this
         viewDataBinding.vm = viewModel
     }
@@ -46,10 +46,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         })
 
         imageAdapter.onChanged.observe(this, Observer {
-            title = if (imageAdapter.selectedImageList.isEmpty())
-                "Gallery Image"
-            else
-                "${imageAdapter.selectedImageList.size} selected"
+            setTitle(if (imageAdapter.selectedImageList.isEmpty()) "Gallery Image" else "${imageAdapter.selectedImageList.size} selected")
             invalidateOptionsMenu()
         })
 
@@ -90,7 +87,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
 
-    private fun setDateData() {
+    private fun setDate() {
         val month = intent.getStringExtra("month")
         val year = intent.getStringExtra("year")
         if (month == null || year == null)
@@ -111,6 +108,10 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         hideImageList()
     }
 
+    private fun setTitle(titleText: String) {
+        title = titleText
+    }
+
     private fun showSelectedImage() {
         viewDataBinding.viewPager.visibility = View.VISIBLE
         viewDataBinding.wormDotsIndicator.visibility = View.VISIBLE
@@ -122,13 +123,10 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     fun showImageList() {
+        setTitle(if (imageAdapter.selectedImageList.isNotEmpty()) "${imageAdapter.selectedImageList.size} selected" else "Gallery Image")
         hideKeyboard()
-        title = if (imageAdapter.selectedImageList.isNotEmpty())
-            "${imageAdapter.selectedImageList.size} selected"
-        else
-            "Gallery Image"
-        invalidateOptionsMenu()
         isOpen = true
+        invalidateOptionsMenu()
         setHomeDrawable()
         viewDataBinding.galleryImageHolder.run {
             visibility = View.VISIBLE
@@ -141,38 +139,19 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     private fun hideImageList() {
+        setTitle("")
         imageAdapter.isClosing = true
-        title = ""
-        invalidateOptionsMenu()
         isOpen = false
+        invalidateOptionsMenu()
         setHomeDrawable()
         viewDataBinding.fabClose.visibility = View.GONE
-        viewDataBinding.galleryImageHolder.run {
-            val animation = AnimationUtils.loadAnimation(context, R.anim.gallery_image_hide)
-            animation.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationRepeat(animation: Animation?) {}
-                override fun onAnimationEnd(animation: Animation?) {
+        viewDataBinding.galleryImageHolder.startAnimation(
+            AnimationUtils.loadAnimation(this, R.anim.gallery_image_hide).also {
+                it.setAnimationListener(CustomAnimationListener {
                     viewDataBinding.galleryImageHolder.visibility = View.GONE
                     imageAdapter.isClosing = false
-                }
-
-                override fun onAnimationStart(animation: Animation?) {}
+                })
             })
-            startAnimation(animation)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_write_diary, menu)
-        return true
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.let {
-            setMenuItemEnable(it)
-            setMenuItemVisible(it)
-        }
-        return super.onPrepareOptionsMenu(menu)
     }
 
     private fun setMenuItemEnable(menu: Menu) {
@@ -186,25 +165,6 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         menu.getItem(1)?.isVisible = isOpen
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> doOnBackPressed(!isOpen)
-            R.id.menu_save -> {
-                loadingDialog.show()
-                viewModel.loadFile(imageAdapter.selectedImageList, this)
-                viewModel.writeDiary()
-            }
-            R.id.menu_clear -> {
-                imageAdapter.clearValue()
-                invalidateOptionsMenu()
-                title = "Gallery Image"
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun doOnBackPressed(isExit: Boolean) = if (isExit) dialog.show() else hideImageList()
-
     private fun setHomeDrawable() {
         if (isOpen) {
             supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
@@ -213,13 +173,10 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         }
     }
 
-    override fun onBackPressed() {
-        doOnBackPressed(!isOpen)
-    }
-
+    private fun doOnBackPressed(isExit: Boolean) = if (isExit) dialog.show() else hideImageList()
 
     private fun initActionBar() {
-        title = ""
+        setTitle("")
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setHomeDrawable()
@@ -256,5 +213,39 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         customDialogBinding.textCancel.setOnClickListener {
             dialog.dismiss()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_write_diary, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.let {
+            setMenuItemEnable(it)
+            setMenuItemVisible(it)
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> doOnBackPressed(!isOpen)
+            R.id.menu_save -> {
+                loadingDialog.show()
+                viewModel.loadFile(imageAdapter.selectedImageList, this)
+                viewModel.writeDiary()
+            }
+            R.id.menu_clear -> {
+                imageAdapter.clearValue()
+                invalidateOptionsMenu()
+                setTitle("Gallery Image")
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        doOnBackPressed(!isOpen)
     }
 }
