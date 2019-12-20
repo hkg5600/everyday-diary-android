@@ -59,6 +59,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         initYearDialog()
         initYearPicker()
         setMonthOfToday()
+        setToday()
         initMonthView()
         setViewPagerPos()
         bottomSheetClick()
@@ -152,20 +153,31 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     @SuppressLint("SetTextI18n")
     @TargetApi(Build.VERSION_CODES.O)
-    private fun getMonthWIthUpApi(): Int {
+    private fun getMonthWIthUpApi() = LocalDate.now().month.value
+
+    @SuppressLint("SetTextI18n")
+    private fun getMonthWIthUnderApi() = Calendar.getInstance().time.month
+
+    private fun setToday() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setTodayWithUpApi()
+        } else {
+            setTodayWIthUnderApi()
+        }
+    }
+
+    @SuppressLint("NewApi", "SetTextI18n")
+    @TargetApi(Build.VERSION_CODES.O)
+    private fun setTodayWithUpApi() {
         viewDataBinding.textViewDate.text =
             "${DateTimeConverter.monthToString(LocalDate.now().month.value)}, ${LocalDate.now().dayOfMonth}/${LocalDateTime.now().year}"
-        return LocalDate.now().month.value
     }
 
     @SuppressLint("SetTextI18n")
-    private fun getMonthWIthUnderApi(): Int {
+    private fun setTodayWIthUnderApi() {
         viewDataBinding.textViewDate.text =
             "${DateTimeConverter.monthToString(Calendar.getInstance().time.month)}, ${Calendar.getInstance().time.day}/${Calendar.getInstance().time.year}"
-        return Calendar.getInstance().time.month
     }
-
-
 
     fun showYearPicker() {
         dialog.show()
