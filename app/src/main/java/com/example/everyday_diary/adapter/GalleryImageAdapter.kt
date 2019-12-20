@@ -34,7 +34,14 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ImageHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.image_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ImageHolder(
+        DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.image_item,
+            parent,
+            false
+        )
+    )
 
     override fun getItemCount() = imageList.size
 
@@ -59,7 +66,8 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
                     holder.count.visibility = View.VISIBLE
                     selectedItem.put(position, true)
                     selectedImageList.add(imageList[position])
-                    holder.count.text = ((selectedImageList.indexOf(imageList[position]) + 1).toString())
+                    holder.count.text =
+                        ((selectedImageList.indexOf(imageList[position]) + 1).toString())
                     isFull = false
                 }
             }
@@ -85,7 +93,8 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
         val imgView: ImageView = binding.imageView
         fun bind(item: Image) {
             itemView.run {
-                Glide.with(context).load(item.uri).placeholder(R.drawable.image_default).override(600, 600).into(image_view)
+                Glide.with(context).load(item.uri).placeholder(R.drawable.image_default)
+                    .override(600, 600).into(image_view)
             }
             binding.item = item
         }
