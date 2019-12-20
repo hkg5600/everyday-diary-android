@@ -21,5 +21,5 @@ interface DiaryApi {
     fun writeDiary(
         @Header("Authorization") token: String, @Part("title") title: RequestBody, @Part("text") text: RequestBody, @Part file: ArrayList<MultipartBody.Part>
         , @Part("owner") owner: RequestBody, @Part("month") month: RequestBody, @Part("year") year: RequestBody
-    ) : Single<retrofit2.Response<Response<Any>>>
+    ): Single<retrofit2.Response<Response<Any>>>
 }
