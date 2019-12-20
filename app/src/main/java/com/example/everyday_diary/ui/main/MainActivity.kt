@@ -3,11 +3,13 @@ package com.example.everyday_diary.ui.main
 import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +25,6 @@ import com.example.everyday_diary.ui.diary_list.DiaryListActivity
 import com.example.everyday_diary.utils.DateTimeConverter
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
-import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
@@ -32,6 +33,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
+import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.databinding.MainBottomSheetDialogBinding
 import com.example.everyday_diary.databinding.YearPickerBinding
 import com.example.everyday_diary.network.response.CardImageResponse
@@ -39,8 +42,13 @@ import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.UserInfoResponse
 import com.example.everyday_diary.ui.start.StartActivity
 import com.example.everyday_diary.ui.write_activity.WriteDiaryActivity
+import com.example.everyday_diary.utils.FileUtil
 import com.example.everyday_diary.utils.UserObject
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_main
@@ -87,15 +95,20 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
                 is CardImageResponse -> {
                     monthAdapter.selectedItem.clear()
-                    it.card_image.map { cardImage ->
-                        monthAdapter.monthList.filter { image ->
-                            image.month == cardImage.month
-                        }.map { card ->
-                            card.image = cardImage
-                            monthAdapter.selectedItem.put(cardImage.month-1, true)
-                        }
-                    }
+                    setCardImage(it)
                     monthAdapter.notifyDataSetChanged()
+                }
+            }
+        })
+
+        viewModel.message.observe(this, Observer {
+            makeToast(it, false)
+            when (it) {
+                "success to delete" -> {
+                    viewModel.getCardImage(viewDataBinding.textViewYear.text.toString().toInt())
+                }
+                "success to add" -> {
+                    viewModel.getCardImage(viewDataBinding.textViewYear.text.toString().toInt())
                 }
             }
         })
@@ -136,10 +149,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                     setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.menu_image_change -> {
-
+                                pickFromGallery()
                             }
                             R.id.menu_image_default -> {
-
+                                viewModel.deleteCardImage(monthAdapter.monthList[position].image?.id!!)
                             }
                         }
                         false
@@ -154,6 +167,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         viewModel.getUserInfo()
         viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
         viewModel.getCardImage(viewDataBinding.textViewYear.text.toString().toInt())
+    }
+
+    private fun pickFromGallery() {
+        startActivityForResult(Intent(Intent.ACTION_PICK).setType("image/*"), 2)
     }
 
     fun startWriteActivity() {
@@ -173,6 +190,28 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         }
         bottomSheetBinding.textViewSetting.setOnClickListener {
             makeToast("setting", false)
+        }
+    }
+
+    private fun doOnFileExists(file: File) {
+        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val multipartData =
+            MultipartBody.Part.createFormData("image", "file.jpg", requestFile)
+        viewModel.postCardImage(
+            monthAdapter.monthList[viewDataBinding.viewPager.currentItem].month.toString(),
+            viewDataBinding.textViewYear.text.toString(),
+            multipartData
+        )
+    }
+
+    private fun setCardImage(cardResponse: CardImageResponse) {
+        cardResponse.card_image.map { cardImage ->
+            monthAdapter.monthList.filter { image ->
+                image.month == cardImage.month
+            }.map { card ->
+                card.image = cardImage
+                monthAdapter.selectedItem.put(cardImage.month - 1, true)
+            }
         }
     }
 
@@ -280,8 +319,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             value = Calendar.getInstance().get(Calendar.YEAR)
         }
         yearPickerBinding.textOk.setOnClickListener {
-            viewDataBinding.textViewYear.text = yearPickerBinding.yearPicker.value.toString()
-            viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
+            initMonthView()
+            viewDataBinding.textViewYear.run {
+                text = yearPickerBinding.yearPicker.value.toString()
+                viewModel.getDiaryCount(this.text.toString().toInt())
+                viewModel.getCardImage(this.text.toString().toInt())
+            }
             viewDataBinding.viewPager.setCurrentItem(0, true)
             dialog.dismiss()
         }
@@ -336,5 +379,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
+        viewModel.getCardImage(viewDataBinding.textViewYear.text.toString().toInt())
+
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+            val url = FileUtil.getRealPathFromURI(data?.data, this)
+            val file = File(FileUtil.getRealPathFromURI(Uri.parse(url), applicationContext)!!)
+            if (file.exists()) {
+                doOnFileExists(file)
+            }
+        }
     }
+
 }

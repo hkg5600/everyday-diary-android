@@ -34,9 +34,38 @@ interface DiaryService {
         token: String,
         year: Int
     ): Single<retrofit2.Response<Response<CardImageResponse>>>
+
+    fun deleteCardImage(
+        token: String,
+        id: Int
+    ): Single<retrofit2.Response<Response<Any>>>
+
+    fun postCardImage(
+        token: String,
+        month: String,
+        year: String,
+        file: MultipartBody.Part
+    ): Single<retrofit2.Response<Response<Any>>>
 }
 
 class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
+    override fun postCardImage(
+        token: String,
+        month: String,
+        year: String,
+        file: MultipartBody.Part
+    ) = api.postCardImage(
+        token,
+        RequestBody.create(MediaType.parse("inputText/plain"), month),
+        RequestBody.create(MediaType.parse("inputText/plain"), year),
+        file
+    )
+
+    override fun deleteCardImage(
+        token: String,
+        id: Int
+    ) = api.deleteCardImage(token, "/api/diary/card-image/$id/")
+
     override fun getCardImage(
         token: String,
         year: Int

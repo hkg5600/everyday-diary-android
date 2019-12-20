@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.ui.main.MainActivity
-import com.example.everyday_diary.utils.FileManager
+import com.example.everyday_diary.utils.FileUtil
 import com.example.everyday_diary.network.response.TokenResponse
 import com.example.everyday_diary.ui.start.StartActivity
 import com.example.everyday_diary.utils.TokenObject
@@ -18,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FileManager.deleteCache(applicationContext)
+        FileUtil.deleteCache(applicationContext)
         viewModel.roomSuccess.observe(this, Observer {
             when (it) {
                 "tokenData" -> {

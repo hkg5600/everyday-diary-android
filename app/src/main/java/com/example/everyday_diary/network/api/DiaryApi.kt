@@ -26,4 +26,14 @@ interface DiaryApi {
 
     @GET
     fun getCardImage(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<CardImageResponse>>>
+
+    @DELETE
+    fun deleteCardImage(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<Any>>>
+
+    @Multipart
+    @POST("/api/diary/card-image/")
+    fun postCardImage(
+        @Header("Authorization") token: String, @Part("month") month: RequestBody,
+        @Part("year") year: RequestBody, @Part file: MultipartBody.Part
+    ) : Single<retrofit2.Response<Response<Any>>>
 }

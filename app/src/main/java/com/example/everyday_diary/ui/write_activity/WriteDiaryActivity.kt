@@ -16,6 +16,7 @@ import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
 import com.example.everyday_diary.databinding.CustomDialogBinding
 import com.example.everyday_diary.utils.CustomAnimationListener
 import com.example.everyday_diary.utils.CustomTextWatcher
+import com.example.everyday_diary.utils.FileUtil
 import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -83,7 +84,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     override fun initViewModel() {
-        imageAdapter.setImage(viewModel.getImageFromGallery(this))
+        imageAdapter.setImage(FileUtil.getImageFromGallery(this))
     }
 
 
@@ -213,6 +214,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         customDialogBinding.textView.text = dialogMsg
         customDialogBinding.textOk.setOnClickListener {
+            dialog.dismiss()
             finish()
         }
         customDialogBinding.textCancel.setOnClickListener {
@@ -238,7 +240,9 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
             android.R.id.home -> doOnBackPressed(!isOpen)
             R.id.menu_save -> {
                 loadingDialog.show()
-                viewModel.loadFile(imageAdapter.selectedImageList, this)
+                ArrayList(FileUtil.loadFile(imageAdapter.selectedImageList, this)).doOnNotEmpty { list ->
+                    viewModel.fileList = list
+                }
                 viewModel.writeDiary()
             }
             R.id.menu_clear -> {
@@ -248,6 +252,12 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private inline fun <T: Collection<Any>> T.doOnNotEmpty(func: (T) -> Unit) {
+        if (this.isNotEmpty()) {
+            func(this)
+        }
     }
 
     override fun onBackPressed() {

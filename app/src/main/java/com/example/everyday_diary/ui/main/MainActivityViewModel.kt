@@ -5,6 +5,7 @@ import com.example.everyday_diary.network.service.DiaryService
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.utils.TokenObject
 import com.example.everyday_diary.utils.UserObject
+import okhttp3.MultipartBody
 
 class MainActivityViewModel(
     private val diaryService: DiaryService,
@@ -26,4 +27,10 @@ class MainActivityViewModel(
 
     fun getCardImage(year: Int) =
         addDisposable(diaryService.getCardImage(TokenObject.tokenData(), year), getDataObserver())
+
+    fun deleteCardImage(id: Int) =
+        addDisposable(diaryService.deleteCardImage(TokenObject.tokenData(), id), getMsgObserver())
+
+    fun postCardImage(month: String, year: String, file: MultipartBody.Part) =
+        addDisposable(diaryService.postCardImage(TokenObject.tokenData(), month, year, file), getMsgObserver())
 }

@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.everyday_diary.R
 import com.example.everyday_diary.databinding.MonthItemBinding
 import com.example.everyday_diary.network.model.CardImage
@@ -65,7 +66,7 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
 
         if (selectedItem.get(position, false))
             holder.cardImage.visibility = View.VISIBLE
-         else
+        else
             holder.cardImage.visibility = View.GONE
 
         holder.layout.setBackgroundColor(Color.parseColor(monthList[position].color))
@@ -85,7 +86,9 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
             itemView.run {
                 item.image?.let {
                     cardImage.visibility = View.VISIBLE
-                    Glide.with(context).load(BASE_URL + it.image).into(image_view_card)
+                    Glide.with(context).load(BASE_URL + it.image)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true).into(image_view_card)
                 }
             }
             binding.item = item
