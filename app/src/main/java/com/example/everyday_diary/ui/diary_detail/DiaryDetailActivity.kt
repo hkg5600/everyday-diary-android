@@ -9,7 +9,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DiaryDetailActivity :
     BaseActivity<ActivityDiaryDetailBinding, DiaryDetailActivityViewModel>() {
-    
+
     override val layoutResourceId = R.layout.activity_diary_detail
     override val viewModel: DiaryDetailActivityViewModel by viewModel()
 
