@@ -35,7 +35,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginFragmentViewModel>
 
         viewModel.error.observe(this, Observer {
             when (it) {
-                "아이디 또는 비밀번호가 일치하지 않습니다" -> makeToast("아이디 또는 비밀번호가 일치하지 않습니다", false)
+                "아이디 또는 비밀번호가 일치하지 않습니다" -> makeToast(it, false)
             }
         })
 
@@ -57,7 +57,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginFragmentViewModel>
         viewDataBinding.editTextId.addTextChangedListener(CustomTextWatcher {
             toggleButtonState()
         })
-        
+
         viewDataBinding.editTextPassword.addTextChangedListener(CustomTextWatcher {
             toggleButtonState()
         })
