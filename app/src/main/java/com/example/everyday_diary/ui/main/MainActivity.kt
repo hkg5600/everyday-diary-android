@@ -205,14 +205,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         viewDataBinding.drawerLayout.addDrawerListener(actionBarDrawerToggle)
         viewDataBinding.drawerLayout.setDrawerListener(object : DrawerLayout.DrawerListener {
-            override fun onDrawerStateChanged(newState: Int) {
-
-            }
-
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-
-            }
-
+            override fun onDrawerStateChanged(newState: Int) {}
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
             override fun onDrawerClosed(drawerView: View) {
                 viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             }
@@ -220,7 +214,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             override fun onDrawerOpened(drawerView: View) {
                 viewDataBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
-
         })
     }
 
