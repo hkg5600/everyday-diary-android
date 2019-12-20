@@ -20,7 +20,7 @@ class DiaryDetailActivity :
 
     override val layoutResourceId = R.layout.activity_diary_detail
     override val viewModel: DiaryDetailActivityViewModel by viewModel()
-    
+
 
     override fun initView() {
         initActionBar()
