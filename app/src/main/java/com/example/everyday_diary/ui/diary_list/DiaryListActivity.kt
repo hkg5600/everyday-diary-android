@@ -62,18 +62,18 @@ class DiaryListActivity : BaseActivity<ActivityDiaryListBinding, DiaryListActivi
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun initRecyclerView() {
         viewDataBinding.recyclerView.apply {
             setHasFixedSize(true)
             adapter = diaryListAdapter
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }
