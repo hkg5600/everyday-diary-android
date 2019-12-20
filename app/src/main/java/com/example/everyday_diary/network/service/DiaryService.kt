@@ -35,7 +35,7 @@ interface DiaryService {
 }
 
 class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
-    
+
     override fun getDiaryDetail(
         token: String,
         id: Int

@@ -56,7 +56,7 @@ var viewModelPart = module {
     viewModel { LoginFragmentViewModel(get()) }
     viewModel { DiaryListActivityViewModel(get()) }
     viewModel { WriteDiaryActivityViewModel(get()) }
-    viewModel { DiaryDetailActivityViewModel() }
+    viewModel { DiaryDetailActivityViewModel(get()) }
 }
 
 var adapterPart = module {
