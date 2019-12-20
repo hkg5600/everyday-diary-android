@@ -55,7 +55,7 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
 
     inner class MonthHolder(private val binding: MonthItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val layout : ConstraintLayout = binding.holderLayout
+        val layout: ConstraintLayout = binding.holderLayout
         val progress: ProgressBar = binding.progressDate
 
         fun bind(item: Month) {
