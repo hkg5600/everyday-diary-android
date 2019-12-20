@@ -54,12 +54,22 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
 
         viewModel.networkError.observe(this, Observer {
             makeToast("check your network connection", false)
-            startActivity((Intent(this, this::class.java)).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
+            startActivity(
+                (Intent(
+                    this,
+                    this::class.java
+                )).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            )
         })
 
         viewModel.tokenChanged.observe(this, Observer {
             if (it) {
-                startActivity((Intent(this, this::class.java)).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK))
+                startActivity(
+                    (Intent(
+                        this,
+                        this::class.java
+                    )).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                )
             } else {
                 makeToast("please sign in", true)
                 startActivity(Intent(this, StartActivity::class.java))
@@ -76,8 +86,10 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
     }
 
     private fun initLoading() {
-        val loading = layoutInflater.inflate(com.example.everyday_diary.R.layout.loading_dialog, null)
-        loadingDialogBinding = LoadingDialogBinding.inflate(layoutInflater, loading as ViewGroup, false)
+        val loading =
+            layoutInflater.inflate(com.example.everyday_diary.R.layout.loading_dialog, null)
+        loadingDialogBinding =
+            LoadingDialogBinding.inflate(layoutInflater, loading as ViewGroup, false)
         loadingDialog = Dialog(this)
         loadingDialog.setContentView(loadingDialogBinding.root)
         loadingDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
