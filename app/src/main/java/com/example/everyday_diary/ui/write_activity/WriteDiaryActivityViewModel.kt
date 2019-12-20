@@ -23,6 +23,7 @@ class WriteDiaryActivityViewModel(private val service: DiaryService) : BaseViewM
     var text = ObservableField<String>()
     var month = ""
     var year = ""
+
     fun writeDiary() = addDisposable(
         service.writeDiary(
             TokenObject.tokenData(),
