@@ -10,6 +10,7 @@ import com.example.everyday_diary.databinding.FragmentLoginBinding
 import com.example.everyday_diary.network.response.LoginResponse
 import com.example.everyday_diary.room.model.Token
 import com.example.everyday_diary.ui.main.MainActivity
+import com.example.everyday_diary.utils.CustomTextWatcher
 import com.example.everyday_diary.utils.TokenObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -52,20 +53,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginFragmentViewModel>
     }
 
     override fun initListener() {
-        viewDataBinding.editTextId.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                toggleButtonState()
-            }
-        })
 
-        viewDataBinding.editTextPassword.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                toggleButtonState()
-            }
+        viewDataBinding.editTextId.addTextChangedListener(CustomTextWatcher {
+            toggleButtonState()
+        })
+        
+        viewDataBinding.editTextPassword.addTextChangedListener(CustomTextWatcher {
+            toggleButtonState()
         })
     }
 
