@@ -87,7 +87,7 @@
                 android:background="@drawable/main_button_background"
                 android:onClick="@{() -> activity.showBottomSheet()()}"
                 android:padding="15dp"
-                android:src="@drawable/ic_settings"
+                android:src="@drawable/ic_setting"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
