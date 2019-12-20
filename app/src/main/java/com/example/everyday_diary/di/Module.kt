@@ -10,6 +10,7 @@ import com.example.everyday_diary.network.service.DiaryService
 import com.example.everyday_diary.network.service.DiaryServiceImpl
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.network.service.UserServiceImpl
+import com.example.everyday_diary.ui.diary_detail.DiaryDetailActivityViewModel
 import com.example.everyday_diary.ui.diary_list.DiaryListActivityViewModel
 import com.example.everyday_diary.ui.login.LoginFragment
 import com.example.everyday_diary.ui.login.LoginFragmentViewModel
@@ -58,6 +59,7 @@ var viewModelPart = module {
     viewModel { LoginFragmentViewModel(get()) }
     viewModel { DiaryListActivityViewModel(get()) }
     viewModel { WriteDiaryActivityViewModel(get()) }
+    viewModel { DiaryDetailActivityViewModel() }
 }
 
 var adapterPart = module {
