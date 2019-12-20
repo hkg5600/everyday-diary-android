@@ -130,7 +130,11 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         setHomeDrawable()
         viewDataBinding.galleryImageHolder.run {
             visibility = View.VISIBLE
-            startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show))
+            startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show).also {
+                it.setAnimationListener(CustomAnimationListener {
+                    viewDataBinding.scrollView.visibility = View.GONE
+                })
+            })
         }
         viewDataBinding.fabClose.run {
             visibility = View.VISIBLE
@@ -145,6 +149,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         invalidateOptionsMenu()
         setHomeDrawable()
         viewDataBinding.fabClose.visibility = View.GONE
+        viewDataBinding.scrollView.visibility = View.VISIBLE
         viewDataBinding.galleryImageHolder.startAnimation(
             AnimationUtils.loadAnimation(this, R.anim.gallery_image_hide).also {
                 it.setAnimationListener(CustomAnimationListener {

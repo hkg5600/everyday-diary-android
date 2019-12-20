@@ -47,13 +47,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     private var monthOfToday = 0
     private lateinit var dialog: Dialog
     private lateinit var yearPickerBinding: YearPickerBinding
-    private lateinit var bottomSheetBinding : MainBottomSheetDialogBinding
-    private lateinit var bottomSheetDialog : BottomSheetDialog
+    private lateinit var bottomSheetBinding: MainBottomSheetDialogBinding
+    private lateinit var bottomSheetDialog: BottomSheetDialog
 
     override fun initView() {
         viewDataBinding.buttonWrite.isEnabled = false
         checkPermission()
-        initActionBar()
         initBottomSheetBinding()
         initBottomSheetDialog()
         initViewPager()
@@ -102,13 +101,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     override fun initListener() {
         monthAdapter.onItemClickListener = object : MonthAdapter.OnItemClickListener {
             override fun onClick(view: View, position: Int, holder: MonthAdapter.MonthHolder) {
-                startActivity(
+                startActivityForResult(
                     Intent(this@MainActivity, DiaryListActivity::class.java)
                         .putExtra(
                             "month",
                             DateTimeConverter.monthToString(monthAdapter.monthList[position].month)
                         )
-                        .putExtra("year", viewDataBinding.textViewYear.text)
+                        .putExtra("year", viewDataBinding.textViewYear.text), 1
                 )
             }
         }
@@ -127,9 +126,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         )
     }
 
-    private fun initActionBar() {
-        title = ""
-        setSupportActionBar(toolbar)
+    private fun bottomSheetClick() {
+        bottomSheetBinding.textViewLogOut.setOnClickListener {
+            viewModel.logout()
+        }
+        bottomSheetBinding.textViewRecent.setOnClickListener {
+            makeToast("recent", false)
+        }
+        bottomSheetBinding.textViewSetting.setOnClickListener {
+            makeToast("setting", false)
+        }
     }
 
     private fun setMonthOfToday() {
@@ -158,6 +164,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             "${DateTimeConverter.monthToString(Calendar.getInstance().time.month)}, ${Calendar.getInstance().time.day}/${Calendar.getInstance().time.year}"
         return Calendar.getInstance().time.month
     }
+
+
 
     fun showYearPicker() {
         dialog.show()
@@ -209,19 +217,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     private fun initBottomSheetBinding() {
         val bottomSheetInflater = layoutInflater.inflate(R.layout.main_bottom_sheet_dialog, null)
-        bottomSheetBinding = MainBottomSheetDialogBinding.inflate(layoutInflater, bottomSheetInflater as ViewGroup, false)
-    }
-
-    private fun bottomSheetClick() {
-        bottomSheetBinding.textViewLogOut.setOnClickListener {
-            viewModel.logout()
-        }
-        bottomSheetBinding.textViewRecent.setOnClickListener {
-            makeToast("recent", false)
-        }
-        bottomSheetBinding.textViewSetting.setOnClickListener {
-            makeToast("setting", false)
-        }
+        bottomSheetBinding = MainBottomSheetDialogBinding.inflate(
+            layoutInflater,
+            bottomSheetInflater as ViewGroup,
+            false
+        )
     }
 
     private fun initYearPicker() {
@@ -233,6 +233,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         yearPickerBinding.textOk.setOnClickListener {
             viewDataBinding.textViewYear.text = yearPickerBinding.yearPicker.value.toString()
             viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
+            viewDataBinding.viewPager.setCurrentItem(0, true)
             dialog.dismiss()
         }
         yearPickerBinding.textCancel.setOnClickListener {
