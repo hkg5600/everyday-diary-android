@@ -43,15 +43,22 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
-        viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
-        viewDataBinding.executePendingBindings()
-
+        initBinding()
         initLoading()
         initView()
         initObserver()
         initListener()
         initViewModel()
+        initBaseObserver()
 
+    }
+
+    private fun initBinding() {
+        viewDataBinding = DataBindingUtil.setContentView(this, layoutResourceId)
+        viewDataBinding.executePendingBindings()
+    }
+
+    private fun initBaseObserver() {
         viewModel.networkError.observe(this, Observer {
             makeToast("check your network connection", false)
             startActivity(
