@@ -19,6 +19,7 @@ import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
 import com.example.everyday_diary.databinding.CustomDialogBinding
 import com.example.everyday_diary.databinding.LoadingDialogBinding
+import com.example.everyday_diary.utils.CustomTextWatcher
 import com.example.everyday_diary.utils.FileManager
 import kotlinx.android.synthetic.main.app_bar.*
 import okhttp3.MediaType
@@ -84,20 +85,12 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
 
     override fun initListener() {
 
-        viewDataBinding.editTextTitle.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                invalidateOptionsMenu()
-            }
+        viewDataBinding.editTextTitle.addTextChangedListener(CustomTextWatcher {
+            invalidateOptionsMenu()
         })
 
-        viewDataBinding.editTextText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                invalidateOptionsMenu()
-            }
+        viewDataBinding.editTextText.addTextChangedListener(CustomTextWatcher {
+            invalidateOptionsMenu()
         })
     }
 
