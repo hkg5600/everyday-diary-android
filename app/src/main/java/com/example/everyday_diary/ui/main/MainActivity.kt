@@ -105,6 +105,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             makeToast(it, false)
             when (it) {
                 "success to delete" -> {
+                    initMonthView()
                     viewModel.getCardImage(viewDataBinding.textViewYear.text.toString().toInt())
                 }
                 "success to add" -> {
@@ -379,9 +380,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         viewModel.getDiaryCount(Integer.parseInt(viewDataBinding.textViewYear.text.toString()))
-        viewModel.getCardImage(viewDataBinding.textViewYear.text.toString().toInt())
 
         if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+            viewModel.getCardImage(viewDataBinding.textViewYear.text.toString().toInt())
             val url = FileUtil.getRealPathFromURI(data?.data, this)
             val file = File(FileUtil.getRealPathFromURI(Uri.parse(url), applicationContext)!!)
             if (file.exists()) {

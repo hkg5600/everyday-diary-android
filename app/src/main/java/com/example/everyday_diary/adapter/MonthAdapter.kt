@@ -86,9 +86,7 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthHolder>() {
             itemView.run {
                 item.image?.let {
                     cardImage.visibility = View.VISIBLE
-                    Glide.with(context).load(BASE_URL + it.image)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true).into(image_view_card)
+                    Glide.with(context).load(BASE_URL + it.image).into(image_view_card)
                 }
             }
             binding.item = item
