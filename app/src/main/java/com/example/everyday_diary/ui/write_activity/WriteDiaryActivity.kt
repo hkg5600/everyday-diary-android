@@ -127,8 +127,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         setTitle(if (imageAdapter.selectedImageList.isNotEmpty()) "${imageAdapter.selectedImageList.size} selected" else "Gallery Image")
         hideKeyboard()
         isOpen = true
-        invalidateOptionsMenu()
-        setHomeDrawable()
+        changeImageListState()
         viewDataBinding.galleryImageHolder.run {
             visibility = View.VISIBLE
             startAnimation(AnimationUtils.loadAnimation(context, R.anim.gallery_image_show).also {
@@ -147,8 +146,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         setTitle("")
         imageAdapter.isClosing = true
         isOpen = false
-        invalidateOptionsMenu()
-        setHomeDrawable()
+        changeImageListState()
         viewDataBinding.fabClose.visibility = View.GONE
         viewDataBinding.scrollView.visibility = View.VISIBLE
         viewDataBinding.galleryImageHolder.startAnimation(
@@ -158,6 +156,11 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
                     imageAdapter.isClosing = false
                 })
             })
+    }
+
+    private fun changeImageListState() {
+        invalidateOptionsMenu()
+        setHomeDrawable()
     }
 
     private fun setMenuItemEnable(menu: Menu) {
