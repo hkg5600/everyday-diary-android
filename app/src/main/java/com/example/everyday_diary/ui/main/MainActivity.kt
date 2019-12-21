@@ -40,6 +40,7 @@ import com.example.everyday_diary.databinding.YearPickerBinding
 import com.example.everyday_diary.network.response.CardImageResponse
 import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.UserInfoResponse
+import com.example.everyday_diary.ui.recent_diary.RecentDiaryActivity
 import com.example.everyday_diary.ui.start.StartActivity
 import com.example.everyday_diary.ui.write_activity.WriteDiaryActivity
 import com.example.everyday_diary.utils.FileUtil
@@ -185,13 +186,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     private fun bottomSheetClick() {
         bottomSheetBinding.textViewLogOut.setOnClickListener {
             viewModel.logout()
+            closeBottomSheet()
+
         }
         bottomSheetBinding.textViewRecent.setOnClickListener {
-            makeToast("recent", false)
+            startActivity(Intent(this, RecentDiaryActivity::class.java))
+            closeBottomSheet()
         }
         bottomSheetBinding.textViewSetting.setOnClickListener {
-            makeToast("setting", false)
         }
+    }
+
+    private fun closeBottomSheet() {
+        bottomSheetDialog.dismiss()
     }
 
     private fun doOnFileExists(file: File) {
@@ -264,7 +271,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         bottomSheetDialog.show()
     }
 
-
     private fun initViewPager() {
         viewDataBinding.viewPager.apply {
             adapter = monthAdapter
@@ -326,7 +332,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                 viewModel.getDiaryCount(this.text.toString().toInt())
                 viewModel.getCardImage(this.text.toString().toInt())
             }
-            viewDataBinding.viewPager.setCurrentItem(0, true)
             dialog.dismiss()
         }
         yearPickerBinding.textCancel.setOnClickListener {
@@ -387,6 +392,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             val file = File(FileUtil.getRealPathFromURI(Uri.parse(url), applicationContext)!!)
             if (file.exists()) {
                 doOnFileExists(file)
+            } else {
+                makeToast("File does not exists", false)
             }
         }
     }

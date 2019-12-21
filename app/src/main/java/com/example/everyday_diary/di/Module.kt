@@ -58,7 +58,7 @@ var viewModelPart = module {
     viewModel { DiaryListActivityViewModel(get()) }
     viewModel { WriteDiaryActivityViewModel(get()) }
     viewModel { DiaryDetailActivityViewModel(get()) }
-    viewModel { RecentDiaryActivityViewModel() }
+    viewModel { RecentDiaryActivityViewModel(get()) }
 }
 
 var adapterPart = module {

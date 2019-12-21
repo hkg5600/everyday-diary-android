@@ -63,12 +63,7 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
     private fun initBaseObserver() {
         viewModel.networkError.observe(this, Observer {
             makeToast("check your network connection", false)
-            startActivity(
-                (Intent(
-                    this,
-                    this::class.java
-                )).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            )
+            finish()
         })
 
         viewModel.tokenChanged.observe(this, Observer {

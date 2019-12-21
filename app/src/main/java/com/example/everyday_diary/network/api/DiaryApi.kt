@@ -36,4 +36,7 @@ interface DiaryApi {
         @Header("Authorization") token: String, @Part("month") month: RequestBody,
         @Part("year") year: RequestBody, @Part file: MultipartBody.Part
     ) : Single<retrofit2.Response<Response<Any>>>
+
+    @GET("/api/diary/recent-diary/")
+    fun getRecentDiary(@Header("Authorization") token: String): Single<retrofit2.Response<Response<DiaryListResponse>>>
 }

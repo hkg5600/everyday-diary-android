@@ -46,9 +46,14 @@ interface DiaryService {
         year: String,
         file: MultipartBody.Part
     ): Single<retrofit2.Response<Response<Any>>>
+
+    fun getRecentDiary(token: String): Single<retrofit2.Response<Response<DiaryListResponse>>>
 }
 
 class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
+
+    override fun getRecentDiary(token: String) = api.getRecentDiary(token)
+
     override fun postCardImage(
         token: String,
         month: String,
