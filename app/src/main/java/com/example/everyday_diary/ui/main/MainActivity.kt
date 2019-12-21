@@ -41,6 +41,7 @@ import com.example.everyday_diary.network.response.CardImageResponse
 import com.example.everyday_diary.network.response.MonthCount
 import com.example.everyday_diary.network.response.UserInfoResponse
 import com.example.everyday_diary.ui.recent_diary.RecentDiaryActivity
+import com.example.everyday_diary.ui.setting.SettingActivity
 import com.example.everyday_diary.ui.start.StartActivity
 import com.example.everyday_diary.ui.write_activity.WriteDiaryActivity
 import com.example.everyday_diary.utils.FileUtil
@@ -194,6 +195,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             closeBottomSheet()
         }
         bottomSheetBinding.textViewSetting.setOnClickListener {
+            startActivity(Intent(this, SettingActivity::class.java))
+            closeBottomSheet()
         }
     }
 

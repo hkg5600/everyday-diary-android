@@ -24,7 +24,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
-        <activity android:name=".ui.setting.SettingActivity"></activity>
+        <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.recent_diary.RecentDiaryActivity" />
         <activity android:name=".ui.diary_detail.DiaryDetailActivity" />
         <activity android:name=".ui.write_activity.WriteDiaryActivity" />
@@ -40,6 +40,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.main.MainActivity" />
+
     </application>
 
 </manifest>
