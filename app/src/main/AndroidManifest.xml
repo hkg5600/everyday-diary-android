@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.main.MainActivity" />
-
+        <receiver android:name=".utils.AlarmReceiver"/>
     </application>
 
 </manifest>
