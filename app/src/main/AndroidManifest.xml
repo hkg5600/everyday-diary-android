@@ -24,7 +24,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
-        <activity android:name=".ui.recent_diary.RecentDiaryActivity"></activity>
+        <activity android:name=".ui.setting.SettingActivity"></activity>
+        <activity android:name=".ui.recent_diary.RecentDiaryActivity" />
         <activity android:name=".ui.diary_detail.DiaryDetailActivity" />
         <activity android:name=".ui.write_activity.WriteDiaryActivity" />
         <activity android:name=".ui.diary_list.DiaryListActivity" />
