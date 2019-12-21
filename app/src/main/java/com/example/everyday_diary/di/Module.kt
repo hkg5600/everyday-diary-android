@@ -13,6 +13,7 @@ import com.example.everyday_diary.ui.login.LoginFragment
 import com.example.everyday_diary.ui.login.LoginFragmentViewModel
 import com.example.everyday_diary.ui.main.MainActivityViewModel
 import com.example.everyday_diary.ui.recent_diary.RecentDiaryActivityViewModel
+import com.example.everyday_diary.ui.setting.SettingActivityViewModel
 import com.example.everyday_diary.ui.splash.SplashActivityViewModel
 import com.example.everyday_diary.ui.start.StartActivityViewModel
 import com.example.everyday_diary.ui.write_activity.WriteDiaryActivityViewModel
@@ -59,6 +60,7 @@ var viewModelPart = module {
     viewModel { WriteDiaryActivityViewModel(get()) }
     viewModel { DiaryDetailActivityViewModel(get()) }
     viewModel { RecentDiaryActivityViewModel(get()) }
+    viewModel { SettingActivityViewModel() }
 }
 
 var adapterPart = module {
