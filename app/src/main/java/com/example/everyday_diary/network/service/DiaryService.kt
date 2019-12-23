@@ -44,6 +44,7 @@ interface DiaryService {
         token: String,
         month: String,
         year: String,
+        owner: String,
         file: MultipartBody.Part
     ): Single<retrofit2.Response<Response<Any>>>
 
@@ -58,11 +59,13 @@ class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
         token: String,
         month: String,
         year: String,
+        owner: String,
         file: MultipartBody.Part
     ) = api.postCardImage(
         token,
         RequestBody.create(MediaType.parse("inputText/plain"), month),
         RequestBody.create(MediaType.parse("inputText/plain"), year),
+        RequestBody.create(MediaType.parse("inputText/plain"), owner),
         file
     )
 

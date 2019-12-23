@@ -4,5 +4,6 @@ data class CardImage(
     val id: Int,
     val month: Int,
     val year: Int,
-    val image: String
+    val image: String,
+    val owner: String
 )

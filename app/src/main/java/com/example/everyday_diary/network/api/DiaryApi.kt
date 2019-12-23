@@ -34,7 +34,7 @@ interface DiaryApi {
     @POST("/api/diary/card-image/")
     fun postCardImage(
         @Header("Authorization") token: String, @Part("month") month: RequestBody,
-        @Part("year") year: RequestBody, @Part file: MultipartBody.Part
+        @Part("year") year: RequestBody, @Part("owner") owner: RequestBody, @Part file: MultipartBody.Part
     ) : Single<retrofit2.Response<Response<Any>>>
 
     @GET("/api/diary/recent-diary/")

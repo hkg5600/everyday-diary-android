@@ -32,5 +32,13 @@ class MainActivityViewModel(
         addDisposable(diaryService.deleteCardImage(TokenObject.tokenData(), id), getMsgObserver())
 
     fun postCardImage(month: String, year: String, file: MultipartBody.Part) =
-        addDisposable(diaryService.postCardImage(TokenObject.tokenData(), month, year, file), getMsgObserver())
+        addDisposable(
+            diaryService.postCardImage(
+                TokenObject.tokenData(),
+                month,
+                year,
+                UserObject.user?.username!!,
+                file
+            ), getMsgObserver()
+        )
 }
