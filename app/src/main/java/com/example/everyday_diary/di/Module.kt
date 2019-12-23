@@ -63,7 +63,7 @@ var viewModelPart = module {
     viewModel { DiaryDetailActivityViewModel(get()) }
     viewModel { RecentDiaryActivityViewModel(get()) }
     viewModel { SettingActivityViewModel() }
-    viewModel { JoinFragmentViewModel() }
+    viewModel { JoinFragmentViewModel(get()) }
 }
 
 var adapterPart = module {

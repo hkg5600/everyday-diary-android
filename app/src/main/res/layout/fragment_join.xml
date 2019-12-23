@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="com.example.everyday_diary.ui.join.JoinFragmentViewModel" />
@@ -31,27 +32,40 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="20dp"
                     android:lineSpacingExtra="8sp"
-                    android:text="@string/string_welcome"
+                    android:text="@string/string_hello"
                     android:textColor="#b3312f36"
                     android:textSize="34sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_view_explain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:lineSpacingExtra="8sp"
+                    android:text="@string/string_information"
+                    android:textColor="#312f36"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_welcome" />
 
                 <EditText
                     android:id="@+id/edit_text_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
-                    android:layout_marginTop="80dp"
+                    android:layout_marginTop="55dp"
                     android:layout_marginEnd="30dp"
                     android:hint="@string/string_hint_email"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:text="@={vm.id}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:singleLine="true"
-                    android:inputType="textEmailAddress"
-                    android:imeOptions="actionNext"
-                    android:text="@={vm.id}"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_welcome" />
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_explain" />
 
                 <EditText
                     android:id="@+id/edit_text_password"
@@ -61,12 +75,27 @@
                     android:layout_marginTop="35dp"
                     android:layout_marginEnd="30dp"
                     android:hint="@string/string_hint_password"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:text="@={vm.pw}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:inputType="textPassword"
-                    android:imeOptions="actionDone"
-                    android:text="@={vm.pw}"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_id" />
+
+                <EditText
+                    android:id="@+id/edit_text_password_again"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginEnd="30dp"
+                    android:hint="@string/string_hint_password_again"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:text="@={vm.pwAgain}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_password" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -82,17 +111,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
-            android:id="@+id/button_login"
+            android:id="@+id/button_join"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            app:layout_anchor="@+id/holder_edit"
-            app:layout_anchorGravity="bottom|end"
             android:layout_marginEnd="30dp"
-            android:background="@drawable/login_button_background"
             android:adjustViewBounds="true"
+            android:background="@drawable/join_button_background"
+            android:onClick="@{() -> vm.join()}"
             android:scaleType="center"
             android:src="@drawable/ic_execute"
-            android:onClick="@{() -> vm.login()}" />
+            app:layout_anchor="@+id/holder_edit"
+            app:layout_anchorGravity="bottom|end" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

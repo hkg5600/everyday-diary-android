@@ -24,6 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="80dp">
 
+
                 <TextView
                     android:id="@+id/text_view_welcome"
                     android:layout_width="wrap_content"
@@ -36,7 +37,6 @@
                     android:textSize="34sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
                 <EditText
                     android:id="@+id/edit_text_id"
                     android:layout_width="match_parent"

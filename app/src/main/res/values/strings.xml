@@ -16,4 +16,7 @@
     <string name="ok">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="string_set">Set</string>
+    <string name="string_hint_password_again">Password again</string>
+    <string name="string_information">Enter your information below</string>
+    <string name="string_hello">Hello</string>
 </resources>

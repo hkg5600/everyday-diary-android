@@ -61,9 +61,7 @@ abstract class BaseViewModel : ViewModel() {
 
     inner class MsgDisposableSingleObserver : DisposableSingleObserver<Any>() {
 
-        override fun onSuccess(t: Any) {
-            filterMsgFromResponse(t)
-        }
+        override fun onSuccess(t: Any) = filterMsgFromResponse(t)
 
         override fun onError(e: Throwable) {
             networkError.call()
