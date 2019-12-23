@@ -5,6 +5,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.util.Log
 import android.view.MenuItem
 import com.example.everyday_diary.R
 import com.example.everyday_diary.base.BaseActivity
@@ -23,9 +24,9 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
     lateinit var dialog: TimePickerDialog
     lateinit var dialogListener: TimePickerDialog.OnTimeSetListener
     private val calendar = Calendar.getInstance()
-    private var alarmTime: Long = 0
     private var hour = 0
     private var minute = 0
+
     override fun initView() {
         settings = getSharedPreferences("Alarm", Context.MODE_PRIVATE)
         setSavedTime()
@@ -35,7 +36,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
         initTimePickerListener()
         initSwitch()
         setCalendar(hour, minute)
-        setAlarmTime()
         viewDataBinding.activity = this
     }
 
@@ -83,10 +83,11 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
     private fun initTimePickerListener() {
         dialogListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             settings.edit().putInt("hour", hourOfDay).putInt("minute", minute).apply()
-            setCalendar(hour, minute)
-            setAlarmTime()
+            setCalendar(hourOfDay, minute)
             setAlarmText(hourOfDay, minute)
+            viewDataBinding.switchButton.isChecked = true
             setAlarm()
+            dialog.dismiss()
         }
     }
 
@@ -94,6 +95,9 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
     private fun setCalendar(hour: Int, minute: Int) {
         calendar.set(Calendar.HOUR_OF_DAY, hour)
         calendar.set(Calendar.MINUTE, minute)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
 
     private fun initAlarmText() {
@@ -102,17 +106,13 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
 
     @SuppressLint("SetTextI18n")
     private fun setAlarmText(hour: Int, minute: Int) {
-        viewDataBinding.textViewTime.text = "next alarm $hour:$minute"
-    }
-
-    private fun setAlarmTime() {
-        alarmTime = calendar.timeInMillis
+        viewDataBinding.textViewTime.text = "$hour:$minute"
     }
 
     private fun setAlarm() {
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
-            alarmTime,
+            calendar.timeInMillis,
             AlarmManager.INTERVAL_DAY,
             pendingIntent
         )

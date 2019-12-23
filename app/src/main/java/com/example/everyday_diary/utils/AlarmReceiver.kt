@@ -12,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.everyday_diary.R
 import com.example.everyday_diary.ui.main.MainActivity
+import com.example.everyday_diary.ui.splash.SplashActivity
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -23,7 +24,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationManager =
             NotificationManagerCompat.from(context)
 
-        val notificationIntent = Intent(context, MainActivity::class.java)
+        val notificationIntent = Intent(context, SplashActivity::class.java)
         notificationIntent.putExtra("notificationId", 100)
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK).flags =
             Intent.FLAG_ACTIVITY_CLEAR_TASK
