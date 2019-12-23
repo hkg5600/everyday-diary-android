@@ -24,6 +24,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
+        <activity android:name=".ui.join.JoinActivity"></activity>
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.recent_diary.RecentDiaryActivity" />
         <activity android:name=".ui.diary_detail.DiaryDetailActivity" />
@@ -40,7 +41,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.main.MainActivity" />
-        <receiver android:name=".utils.AlarmReceiver"/>
+
+        <receiver android:name=".utils.AlarmReceiver" />
     </application>
 
 </manifest>
