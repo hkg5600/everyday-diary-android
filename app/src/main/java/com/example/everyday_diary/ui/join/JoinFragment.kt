@@ -9,7 +9,27 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.example.everyday_diary.R
+import com.example.everyday_diary.base.BaseFragment
+import com.example.everyday_diary.databinding.FragmentJoinBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class JoinFragment : Fragment() {
+class JoinFragment : BaseFragment<FragmentJoinBinding, JoinFragmentViewModel>() {
+    override val layoutResourceId = R.layout.fragment_join
+    override val viewModel: JoinFragmentViewModel by viewModel()
+
+    override fun initView() {
+
+    }
+
+    override fun initObserver() {
+    }
+
+    override fun initListener() {
+
+    }
+
+    override fun initViewModel() {
+
+    }
 
 }
