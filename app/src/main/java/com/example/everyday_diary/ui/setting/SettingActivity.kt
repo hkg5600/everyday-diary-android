@@ -121,7 +121,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
-            60000,
+            AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
     }
