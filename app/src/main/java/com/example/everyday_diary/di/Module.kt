@@ -9,6 +9,8 @@ import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.network.service.UserServiceImpl
 import com.example.everyday_diary.ui.diary_detail.DiaryDetailActivityViewModel
 import com.example.everyday_diary.ui.diary_list.DiaryListActivityViewModel
+import com.example.everyday_diary.ui.join.JoinFragment
+import com.example.everyday_diary.ui.join.JoinFragmentViewModel
 import com.example.everyday_diary.ui.login.LoginFragment
 import com.example.everyday_diary.ui.login.LoginFragmentViewModel
 import com.example.everyday_diary.ui.main.MainActivityViewModel
@@ -61,6 +63,7 @@ var viewModelPart = module {
     viewModel { DiaryDetailActivityViewModel(get()) }
     viewModel { RecentDiaryActivityViewModel(get()) }
     viewModel { SettingActivityViewModel() }
+    viewModel { JoinFragmentViewModel() }
 }
 
 var adapterPart = module {
@@ -81,6 +84,7 @@ var tokenPart = module {
 
 var fragmentPart = module {
     factory { LoginFragment() }
+    factory { JoinFragment() }
 }
 
 var myDiModule = listOf(
