@@ -23,7 +23,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
     lateinit var pendingIntent: PendingIntent
     lateinit var dialog: TimePickerDialog
     lateinit var dialogListener: TimePickerDialog.OnTimeSetListener
-    private val calendar = Calendar.getInstance()
+    private var calendar = Calendar.getInstance()
     private var hour = 0
     private var minute = 0
 
@@ -93,11 +93,13 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
 
 
     private fun setCalendar(hour: Int, minute: Int) {
+        calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, hour)
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
-        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        if (calendar.timeInMillis < Calendar.getInstance().timeInMillis)
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
 
     private fun initAlarmText() {
@@ -110,10 +112,16 @@ class SettingActivity : BaseActivity<ActivitySettingBinding, SettingActivityView
     }
 
     private fun setAlarm() {
+        Log.e("Time1", Calendar.getInstance().timeInMillis.toString())
+        Log.e("Time2", calendar.timeInMillis.toString())
+        Log.e(
+            "Time sub",
+            ((calendar.timeInMillis - Calendar.getInstance().timeInMillis) / 1000).toString()
+        )
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
+            60000,
             pendingIntent
         )
     }
