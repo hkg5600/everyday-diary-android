@@ -27,14 +27,16 @@ class WriteDiaryActivityViewModel(private val service: DiaryService) : BaseViewM
     fun writeDiary() = addDisposable(
         service.writeDiary(
             TokenObject.tokenData(),
-            title.get()!!,
-            text.get()!!,
+            createRequestBody(title.get()!!),
+            createRequestBody(text.get()!!),
             fileList,
-            UserObject.user?.username!!,
-            month,
-            year
+            createRequestBody(UserObject.user?.username!!),
+            createRequestBody(month),
+            createRequestBody(year)
         ), getMsgObserver()
     )
+
+    private fun createRequestBody(data: String) = RequestBody.create(MediaType.parse("inputText/plain"), data)
 
 
 }

@@ -5,6 +5,7 @@ import com.example.everyday_diary.network.response.*
 import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.MultipartBody
+import okhttp3.Request
 import okhttp3.RequestBody
 
 interface DiaryService {
@@ -17,12 +18,12 @@ interface DiaryService {
 
     fun writeDiary(
         token: String,
-        title: String,
-        text: String,
+        title: RequestBody,
+        text: RequestBody,
         file: ArrayList<MultipartBody.Part>,
-        owner: String,
-        month: String,
-        year: String
+        owner: RequestBody,
+        month: RequestBody,
+        year: RequestBody
     ): Single<retrofit2.Response<Response<Any>>>
 
     fun getDiaryDetail(
@@ -42,9 +43,9 @@ interface DiaryService {
 
     fun postCardImage(
         token: String,
-        month: String,
-        year: String,
-        owner: String,
+        month: RequestBody,
+        year: RequestBody,
+        owner: RequestBody,
         file: MultipartBody.Part
     ): Single<retrofit2.Response<Response<Any>>>
 
@@ -57,17 +58,11 @@ class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
 
     override fun postCardImage(
         token: String,
-        month: String,
-        year: String,
-        owner: String,
+        month: RequestBody,
+        year: RequestBody,
+        owner: RequestBody,
         file: MultipartBody.Part
-    ) = api.postCardImage(
-        token,
-        RequestBody.create(MediaType.parse("inputText/plain"), month),
-        RequestBody.create(MediaType.parse("inputText/plain"), year),
-        RequestBody.create(MediaType.parse("inputText/plain"), owner),
-        file
-    )
+    ) = api.postCardImage(token, month, year, owner, file)
 
     override fun deleteCardImage(
         token: String,
@@ -84,26 +79,18 @@ class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
         id: Int
     ) = api.getDiaryDetail(token, "/api/diary/diary/$id/")
 
-    override fun writeDiary(
-        token: String,
-        title: String,
-        text: String,
-        file: ArrayList<MultipartBody.Part>,
-        owner: String,
-        month: String,
-        year: String
-    ) = api.writeDiary(
-        token,
-        RequestBody.create(MediaType.parse("inputText/plain"), title),
-        RequestBody.create(MediaType.parse("inputText/plain"), text),
-        file,
-        RequestBody.create(MediaType.parse("inputText/plain"), owner),
-        RequestBody.create(MediaType.parse("inputText/plain"), month),
-        RequestBody.create(MediaType.parse("inputText/plain"), year)
-    )
-
     override fun getDiaryByDate(token: String, month: Int, year: Int) =
         api.getDiaryByDate(token, "/api/diary/diary-month/$month/$year/")
+
+    override fun writeDiary(
+        token: String,
+        title: RequestBody,
+        text: RequestBody,
+        file: ArrayList<MultipartBody.Part>,
+        owner: RequestBody,
+        month: RequestBody,
+        year: RequestBody
+    ) = api.writeDiary(token, title, text, file, owner, month, year)
 
     override fun getDiaryCount(token: String, id: Int) =
         api.getDiaryCount(token, "/api/diary/month/$id/")

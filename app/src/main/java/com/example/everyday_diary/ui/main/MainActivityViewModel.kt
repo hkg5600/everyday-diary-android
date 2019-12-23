@@ -5,7 +5,9 @@ import com.example.everyday_diary.network.service.DiaryService
 import com.example.everyday_diary.network.service.UserService
 import com.example.everyday_diary.utils.TokenObject
 import com.example.everyday_diary.utils.UserObject
+import okhttp3.MediaType
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class MainActivityViewModel(
     private val diaryService: DiaryService,
@@ -35,10 +37,12 @@ class MainActivityViewModel(
         addDisposable(
             diaryService.postCardImage(
                 TokenObject.tokenData(),
-                month,
-                year,
-                UserObject.user?.username!!,
+                createRequestBody(month),
+                createRequestBody(year),
+                createRequestBody(UserObject.user?.username!!),
                 file
             ), getMsgObserver()
         )
+
+    private fun createRequestBody(data: String) = RequestBody.create(MediaType.parse("inputText/plain"), data)
 }
