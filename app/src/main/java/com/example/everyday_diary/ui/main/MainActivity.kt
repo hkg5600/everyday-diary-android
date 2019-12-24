@@ -4,7 +4,10 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.Dialog
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -44,6 +47,7 @@ import com.example.everyday_diary.ui.recent_diary.RecentDiaryActivity
 import com.example.everyday_diary.ui.setting.SettingActivity
 import com.example.everyday_diary.ui.start.StartActivity
 import com.example.everyday_diary.ui.write_activity.WriteDiaryActivity
+import com.example.everyday_diary.utils.AlarmReceiver
 import com.example.everyday_diary.utils.FileUtil
 import com.example.everyday_diary.utils.UserObject
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -186,9 +190,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     private fun bottomSheetClick() {
         bottomSheetBinding.textViewLogOut.setOnClickListener {
+            removeAlarm()
             viewModel.logout()
             closeBottomSheet()
-
         }
         bottomSheetBinding.textViewRecent.setOnClickListener {
             startActivity(Intent(this, RecentDiaryActivity::class.java))
@@ -198,6 +202,20 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             startActivity(Intent(this, SettingActivity::class.java))
             closeBottomSheet()
         }
+    }
+
+    private fun removeAlarm() {
+        setAlarmFalse()
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, AlarmReceiver::class.java)
+        val pendingIntent =
+            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.cancel(pendingIntent)
+    }
+
+    private fun setAlarmFalse() {
+        val setting = getSharedPreferences("Alarm", Context.MODE_PRIVATE)
+        setting.edit().putBoolean("switch_key", false).apply()
     }
 
     private fun closeBottomSheet() {
