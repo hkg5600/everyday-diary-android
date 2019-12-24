@@ -63,7 +63,7 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
     private fun initBaseObserver() {
         viewModel.networkError.observe(this, Observer {
             makeToast("check your network connection", false)
-            finish()
+            recreate()
         })
 
         viewModel.tokenChanged.observe(this, Observer {
