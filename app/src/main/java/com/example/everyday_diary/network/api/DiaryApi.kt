@@ -15,11 +15,18 @@ interface DiaryApi {
     fun getDiaryByDate(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<DiaryListResponse>>>
 
     @Multipart
-    @POST("/api/diary/diary/")
+    @POST("/diary/diary/")
     fun writeDiary(
         @Header("Authorization") token: String, @Part("title") title: RequestBody, @Part("text") text: RequestBody, @Part file: ArrayList<MultipartBody.Part>
         , @Part("owner") owner: RequestBody, @Part("month") month: RequestBody, @Part("year") year: RequestBody
     ): Single<retrofit2.Response<Response<Any>>>
+
+    @Multipart
+    @POST("/diary/diary/")
+    fun writeDiary2(
+        @Header("Authorization") token: String, @Part("title") title: RequestBody, @Part("text") text: RequestBody, @Part file: MultipartBody.Part
+        , @Part("owner") owner: RequestBody, @Part("month") month: RequestBody, @Part("year") year: RequestBody
+    ) : Single<retrofit2.Response<Response<String>>>
 
     @GET
     fun getDiaryDetail(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<DiaryDetailReponse>>>
@@ -31,12 +38,12 @@ interface DiaryApi {
     fun deleteCardImage(@Header("Authorization") token: String, @Url url: String): Single<retrofit2.Response<Response<Any>>>
 
     @Multipart
-    @POST("/api/diary/card-image/")
+    @POST("/diary/card-image/")
     fun postCardImage(
         @Header("Authorization") token: String, @Part("month") month: RequestBody,
         @Part("year") year: RequestBody, @Part("owner") owner: RequestBody, @Part file: MultipartBody.Part
     ) : Single<retrofit2.Response<Response<Any>>>
 
-    @GET("/api/diary/recent-diary/")
+    @GET("/diary/recent-diary/")
     fun getRecentDiary(@Header("Authorization") token: String): Single<retrofit2.Response<Response<DiaryListResponse>>>
 }

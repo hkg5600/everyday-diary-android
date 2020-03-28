@@ -1,12 +1,15 @@
 package com.example.everyday_diary.ui.write_activity
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.viewpager2.widget.ViewPager2
 import com.example.everyday_diary.R
 import com.example.everyday_diary.adapter.DiaryWriteImageAdapter
@@ -14,12 +17,11 @@ import com.example.everyday_diary.adapter.GalleryImageAdapter
 import com.example.everyday_diary.base.BaseActivity
 import com.example.everyday_diary.databinding.ActivityWriteDiaryBinding
 import com.example.everyday_diary.databinding.CustomDialogBinding
-import com.example.everyday_diary.utils.CustomAnimationListener
-import com.example.everyday_diary.utils.CustomTextWatcher
-import com.example.everyday_diary.utils.FileUtil
+import com.example.everyday_diary.utils.*
 import kotlinx.android.synthetic.main.app_bar.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryActivityViewModel>() {
     override val layoutResourceId = R.layout.activity_write_diary
@@ -42,6 +44,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     override fun initObserver() {
+
         imageAdapter.overSize.observe(this, Observer {
             makeToast("You can select up to 13", false)
         })
@@ -164,8 +167,8 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
     }
 
     private fun setMenuItemEnable(menu: Menu) {
-        menu.getItem(0)?.isEnabled =
-            viewDataBinding.editTextTitle.text.isNotEmpty() && viewDataBinding.editTextText.text.isNotEmpty()
+        menu.getItem(0)?.isEnabled = true
+            //viewDataBinding.editTextTitle.text.isNotEmpty() && viewDataBinding.editTextText.text.isNotEmpty()
         menu.getItem(1)?.isEnabled = imageAdapter.selectedImageList.isNotEmpty()
     }
 
@@ -196,6 +199,7 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
             layoutManager = GridLayoutManager(context, 3)
             setHasFixedSize(true)
             adapter = imageAdapter
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         }
     }
 
@@ -206,7 +210,6 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
             viewDataBinding.wormDotsIndicator.setViewPager2(this)
         }
     }
-
 
     private fun initDialog(dialogMsg: String) {
         val customDialog = layoutInflater.inflate(R.layout.custom_dialog, null)
@@ -242,11 +245,17 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
         when (item.itemId) {
             android.R.id.home -> doOnBackPressed(!isOpen)
             R.id.menu_save -> {
-                loadingDialog.show()
-                ArrayList(FileUtil.loadFile(imageAdapter.selectedImageList, this)).doOnNotEmpty { list ->
-                    viewModel.fileList = list
-                }
-                viewModel.writeDiary()
+//                loadingDialog.show()
+//
+//                ArrayList(FileUtil.loadFile(imageAdapter.selectedImageList, this)).doOnNotEmpty { list ->
+//                    viewModel.fileList = list
+//                }
+//                viewModel.writeDiary()
+                val intent = Intent()
+                intent.type = "video/*"
+                intent.action = Intent.ACTION_PICK
+                startActivityForResult(Intent.createChooser(intent, "Select Video"), 10)
+
             }
             R.id.menu_clear -> {
                 imageAdapter.clearValue()
@@ -255,6 +264,22 @@ class WriteDiaryActivity : BaseActivity<ActivityWriteDiaryBinding, WriteDiaryAct
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            val uri = data?.data
+            val realPath = FileUtil.getRealPathFromURI(uri, applicationContext)
+            if (realPath != null) {
+                Log.e("Path", realPath)
+                WorkManagerHelper.makeWorkManagerInstance(this, realPath)
+//                val intent = Intent(this, MyService::class.java)
+//                intent.putExtra("value", realPath)
+//                startService(intent)
+                finish()
+            }
+        }
     }
 
     private inline fun <T: Collection<Any>> T.doOnNotEmpty(func: (T) -> Unit) {

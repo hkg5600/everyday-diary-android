@@ -14,20 +14,44 @@ import java.nio.file.Files.isDirectory
 
 object FileUtil {
 
-    fun loadFile(imageList: ArrayList<GalleryImageAdapter.Image>, context: Context) : List<MultipartBody.Part> {
+    fun loadFile(
+        imageList: ArrayList<GalleryImageAdapter.Image>,
+        context: Context
+    ): List<MultipartBody.Part> {
         lateinit var multipartData: MultipartBody.Part
         if (imageList.isNotEmpty()) {
-                return imageList.map {
-                    val file = File(getRealPathFromURI(Uri.parse(it.uri), context)!!)
-                    if (file.exists()) {
-                        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
-                        multipartData = MultipartBody.Part.createFormData("image_${imageList.indexOf(it)}", "file.jpg", requestFile)
-                    }
-                    multipartData
+            return imageList.map {
+                val file = File(getRealPathFromURI(Uri.parse(it.uri), context)!!)
+                if (file.exists()) {
+                    val requestFile =
+                        RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                    multipartData = MultipartBody.Part.createFormData(
+                        "image_${imageList.indexOf(it)}",
+                        "file.jpg",
+                        requestFile
+                    )
                 }
+                multipartData
             }
-            return emptyList()
         }
+        return emptyList()
+    }
+
+    fun loadFile2(imageList: String, context: Context): MultipartBody.Part {
+        lateinit var multipartData: MultipartBody.Part
+        if (imageList.isNotEmpty()) {
+            val file = File(getRealPathFromURI(Uri.parse(imageList), context)!!)
+            if (file.exists()) {
+                val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                multipartData = MultipartBody.Part.createFormData(
+                    "image",
+                    "file.mp4",
+                    requestFile
+                )
+            }
+        }
+        return multipartData
+    }
 
 
     fun getImageFromGallery(context: Activity): ArrayList<String> {

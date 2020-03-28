@@ -9,6 +9,15 @@ import okhttp3.Request
 import okhttp3.RequestBody
 
 interface DiaryService {
+    fun writeDiary2(
+        token: String,
+        title: RequestBody,
+        text: RequestBody,
+        file: MultipartBody.Part,
+        owner: RequestBody,
+        month: RequestBody,
+        year: RequestBody
+    ) : Single<retrofit2.Response<Response<String>>>
     fun getDiaryCount(token: String, id: Int): Single<retrofit2.Response<Response<MonthCount>>>
     fun getDiaryByDate(
         token: String,
@@ -50,11 +59,13 @@ interface DiaryService {
     ): Single<retrofit2.Response<Response<Any>>>
 
     fun getRecentDiary(token: String): Single<retrofit2.Response<Response<DiaryListResponse>>>
+    fun getDiaryCount2(token: String, id: Int): Single<MonthCount?>
 }
 
 class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
 
     override fun getRecentDiary(token: String) = api.getRecentDiary(token)
+
 
     override fun postCardImage(
         token: String,
@@ -67,20 +78,20 @@ class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
     override fun deleteCardImage(
         token: String,
         id: Int
-    ) = api.deleteCardImage(token, "/api/diary/card-image/$id/")
+    ) = api.deleteCardImage(token, "/diary/card-image/$id/")
 
     override fun getCardImage(
         token: String,
         year: Int
-    ) = api.getCardImage(token, "/api/diary/card-image/$year/")
+    ) = api.getCardImage(token, "/diary/card-image/$year/")
 
     override fun getDiaryDetail(
         token: String,
         id: Int
-    ) = api.getDiaryDetail(token, "/api/diary/diary/$id/")
+    ) = api.getDiaryDetail(token, "/diary/diary/$id/")
 
     override fun getDiaryByDate(token: String, month: Int, year: Int) =
-        api.getDiaryByDate(token, "/api/diary/diary-month/$month/$year/")
+        api.getDiaryByDate(token, "/diary/diary-month/$month/$year/")
 
     override fun writeDiary(
         token: String,
@@ -92,6 +103,22 @@ class DiaryServiceImpl(private val api: DiaryApi) : DiaryService {
         year: RequestBody
     ) = api.writeDiary(token, title, text, file, owner, month, year)
 
+    override fun writeDiary2(
+        token: String,
+        title: RequestBody,
+        text: RequestBody,
+        file: MultipartBody.Part,
+        owner: RequestBody,
+        month: RequestBody,
+        year: RequestBody
+    ) = api.writeDiary2(token, title, text, file, owner, month, year)
+
     override fun getDiaryCount(token: String, id: Int) =
-        api.getDiaryCount(token, "/api/diary/month/$id/")
+        api.getDiaryCount(token, "/diary/month/$id/")
+    override fun getDiaryCount2(
+        token: String,
+        id: Int
+    ) = api.getDiaryCount(token, "/diary/month/$id/").map {
+        MonthCountFilter.getFilteredData(it)
+    }
 }

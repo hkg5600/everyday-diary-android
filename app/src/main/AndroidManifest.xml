@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.everyday_diary">
+    package="com.example.everyday_diary"
+    tools:ignore="LockedOrientationActivity">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,6 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".utils.MyApplication"
@@ -24,15 +26,32 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
-        <activity android:name=".ui.join.JoinActivity"></activity>
-        <activity android:name=".ui.setting.SettingActivity" />
-        <activity android:name=".ui.recent_diary.RecentDiaryActivity" />
-        <activity android:name=".ui.diary_detail.DiaryDetailActivity" />
-        <activity android:name=".ui.write_activity.WriteDiaryActivity" />
-        <activity android:name=".ui.diary_list.DiaryListActivity" />
-        <activity android:name=".ui.start.StartActivity" />
+        <service
+            android:name=".utils.MyService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".ui.setting.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.recent_diary.RecentDiaryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.diary_detail.DiaryDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.write_activity.WriteDiaryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.diary_list.DiaryListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.start.StartActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.splash.SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,9 +59,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
 
-        <receiver android:name=".utils.AlarmReceiver" />
+        <receiver
+            android:name=".utils.AlarmReceiver"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

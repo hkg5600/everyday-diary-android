@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.everyday_diary.databinding.LoadingDialogBinding
 import com.example.everyday_diary.ui.start.StartActivity
+import com.example.everyday_diary.utils.NotificationUtil
+import com.example.everyday_diary.utils.WorkManagerHelper
 
 abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatActivity() {
 
@@ -43,7 +45,6 @@ abstract class BaseActivity<T : ViewDataBinding, R : BaseViewModel> : AppCompatA
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         initBinding()
         initLoading()

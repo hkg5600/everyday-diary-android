@@ -129,10 +129,10 @@ abstract class BaseViewModel : ViewModel() {
 
     fun refreshToken() {
         loading.value = true
-        addDisposable(tokenUtil?.refreshToken(TokenObject.refreshToken!!)!!, getTokenObserver())
+        addDisposable(tokenUtil?.refreshToken(TokenObject.refreshToken!!)!!, getRefreshTokenObserver())
     }
 
-    private fun getTokenObserver() = TokenDisposableSingleObserver()
+    private fun getRefreshTokenObserver() = RefreshTokenDisposableSingleObserver()
 
     inner class TokenRoomDisposableSingleObserver : DisposableSingleObserver<Token>() {
         override fun onSuccess(t: Token) {
@@ -148,7 +148,7 @@ abstract class BaseViewModel : ViewModel() {
         }
     }
 
-    inner class TokenDisposableSingleObserver : DisposableSingleObserver<Any>() {
+    inner class RefreshTokenDisposableSingleObserver : DisposableSingleObserver<Any>() {
 
         override fun onSuccess(t: Any) {
             loading.value = false

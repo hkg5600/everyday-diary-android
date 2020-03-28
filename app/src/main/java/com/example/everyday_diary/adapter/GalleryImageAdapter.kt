@@ -19,7 +19,6 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
     var onChanged: SingleLiveEvent<Any> = SingleLiveEvent()
     var selectedItem = SparseBooleanArray(0)
     var selectedImageList = ArrayList<Image>()
-    var isFull = false
     var isClosing = false
 
     data class Image(val uri: String)
@@ -50,16 +49,13 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
         holder.imgView.setOnClickListener {
             if (isClosing)
                 return@setOnClickListener
-            if (selectedImageList.size >= 13)
-                isFull = true
             if (selectedItem.get(position, false)) {
                 holder.imgView.alpha = 1F
                 holder.count.visibility = View.GONE
                 selectedItem.put(position, false)
                 selectedImageList.remove(imageList[position])
-                isFull = false
             } else {
-                if (isFull) {
+                if (selectedImageList.size >= 13) {
                     overSize.call()
                 } else {
                     holder.imgView.alpha = 0.2F
@@ -68,7 +64,6 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
                     selectedImageList.add(imageList[position])
                     holder.count.text =
                         ((selectedImageList.indexOf(imageList[position]) + 1).toString())
-                    isFull = false
                 }
             }
             loadValue()
@@ -110,7 +105,6 @@ class GalleryImageAdapter : RecyclerView.Adapter<GalleryImageAdapter.ImageHolder
 
     fun clearValue() {
         selectedImageList.clear()
-        isFull = false
         var position: Int
         for (index: Int in 0 until selectedItem.size()) {
             position = selectedItem.keyAt(index)
